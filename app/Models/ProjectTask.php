@@ -3,8 +3,78 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ProjectTask extends Model
 {
-    //
+    use SoftDeletes;
+
+    protected $fillable = [
+        'project_id',
+        'phase_id',
+        'assigned_to',
+        'created_by',
+        'parent_task_id',
+        'title',
+        'description',
+        'status',
+        'priority',
+        'due_date',
+        'estimated_hours',
+        'logged_hours',
+        'sort_order',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'status' => 'string',
+            'priority' => 'string',
+            'due_date' => 'date',
+        ];
+    }
+
+    // Relationships
+    public function project(): BelongsTo
+    {
+        return $this->belongsTo(Project::class);
+    }
+
+    public function phase(): BelongsTo
+    {
+        return $this->belongsTo(ProjectPhase::class, 'phase_id');
+    }
+
+    public function assignee(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'assigned_to');
+    }
+
+    public function creator(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function parentTask(): BelongsTo
+    {
+        return $this->belongsTo(ProjectTask::class, 'parent_task_id');
+    }
+
+    public function subtasks(): HasMany
+    {
+        return $this->hasMany(ProjectTask::class, 'parent_task_id');
+    }
+
+    public function comments(): MorphMany
+    {
+        return $this->morphMany(ProjectComment::class, 'commentable');
+    }
+
+    public function timeLogs(): HasMany
+    {
+        return $this->hasMany(TimeLog::class, 'task_id');
+    }
 }
