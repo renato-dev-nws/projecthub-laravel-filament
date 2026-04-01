@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->enum('type', ['fixed', 'hourly', 'monthly'])->default('fixed');
             $table->decimal('default_price', 15, 2)->default(0);
-            $table->string('unit', 30)->nullable();
+            $table->string('unit_type', 30)->nullable();
             $table->boolean('is_active')->default(true);
             $table->string('category')->nullable();
             $table->timestamps();

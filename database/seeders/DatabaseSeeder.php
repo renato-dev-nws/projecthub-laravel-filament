@@ -15,11 +15,29 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Criar Super Admin
+        User::updateOrCreate(
+            ['email' => 'admin@projecthub.app'],
+            [
+                'name' => 'Admin',
+                'password' => \Illuminate\Support\Facades\Hash::make('password'),
+                'email_verified_at' => now(),
+            ]
+        );
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // Roles e Permissions
+        $this->call(RoleAndPermissionSeeder::class);
+
+        // Users da equipe
+        $this->call(UserSeeder::class);
+
+        // Serviços
+        $this->call(ServiceSeeder::class);
+
+        // Clientes
+        $this->call(ClientSeeder::class);
+
+        // Projetos
+        $this->call(ProjectSeeder::class);
     }
 }

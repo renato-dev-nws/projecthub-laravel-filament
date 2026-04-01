@@ -25,11 +25,14 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->string('city')->nullable();
             $table->string('state', 2)->nullable();
-            $table->string('zip_code', 10)->nullable();
-            $table->string('country', 2)->default('BR');
+            $table->string('postal_code', 10)->nullable();
+            $table->string('country', 50)->default('BR');
             $table->enum('status', ['active', 'inactive', 'prospect'])->default('prospect');
             $table->text('notes')->nullable();
             $table->foreignId('account_manager_id')->nullable()->constrained('users');
+            $table->date('contract_start_date')->nullable();
+            $table->date('contract_end_date')->nullable();
+            $table->string('billing_email')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

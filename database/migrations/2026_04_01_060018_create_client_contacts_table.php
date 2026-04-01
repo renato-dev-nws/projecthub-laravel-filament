@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('phone', 20)->nullable();
             $table->string('position')->nullable();
             $table->boolean('is_primary')->default(false);
+            $table->boolean('can_access_portal')->default(false);
             $table->boolean('receives_reports')->default(true);
             $table->timestamps();
         });

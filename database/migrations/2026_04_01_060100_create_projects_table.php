@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('slug')->unique();
+            $table->string('slug')->unique()->nullable();
             $table->string('code')->unique();
             $table->foreignId('client_id')->constrained();
             $table->foreignId('quote_id')->nullable()->constrained();

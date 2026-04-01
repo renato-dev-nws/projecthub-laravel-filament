@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('project_id')->constrained()->cascadeOnDelete();
             $table->foreignId('phase_id')->nullable()->constrained('project_phases');
             $table->foreignId('assigned_to')->nullable()->constrained('users');
-            $table->foreignId('created_by')->constrained('users');
+            $table->foreignId('created_by')->nullable()->constrained('users');
             $table->foreignId('parent_task_id')->nullable()->constrained('project_tasks');
             $table->string('title');
             $table->text('description')->nullable();
