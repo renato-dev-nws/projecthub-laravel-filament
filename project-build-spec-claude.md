@@ -128,7 +128,7 @@ O **Laravel Boost** é o MCP server recomendado para projetos Laravel com Filame
 
 ```bash
 # Instalar via Composer (fora do Sail, com PHP do host)
-composer require laravel-boost/laravel-boost --dev
+composer require laravel/boost --dev
 
 # Publicar configuração
 php artisan vendor:publish --tag="boost-config"
@@ -2160,7 +2160,7 @@ sail npm run dev
 
 ```bash
 # Laravel Boost — com PHP do host (não do Sail)
-composer require laravel-boost/laravel-boost --dev
+composer require laravel/boost --dev
 php artisan boost:install
 
 # Filament MCP Server — no host

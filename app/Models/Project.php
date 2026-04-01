@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -22,18 +23,24 @@ class Project extends Model implements HasMedia
 
     protected $fillable = [
         'client_id',
+        'quote_id',
         'name',
         'slug',
         'code',
         'description',
         'project_manager_id',
         'status',
+        'priority',
         'start_date',
         'end_date',
         'estimated_hours',
+        'logged_hours',
         'budget',
+        'spent',
         'progress_percent',
+        'settings',
         'client_portal_enabled',
+        'client_can_comment',
         'color',
         'notes',
     ];
@@ -42,11 +49,16 @@ class Project extends Model implements HasMedia
     {
         return [
             'status' => 'string',
+            'priority' => 'string',
             'start_date' => 'date',
             'end_date' => 'date',
+            'logged_hours' => 'integer',
             'budget' => 'decimal:2',
+            'spent' => 'decimal:2',
             'progress_percent' => 'integer',
+            'settings' => 'array',
             'client_portal_enabled' => 'boolean',
+            'client_can_comment' => 'boolean',
         ];
     }
 
@@ -75,7 +87,19 @@ class Project extends Model implements HasMedia
         return $this->belongsTo(User::class, 'project_manager_id');
     }
 
-    public function members(): HasMany
+    public function quote(): BelongsTo
+    {
+        return $this->belongsTo(Quote::class);
+    }
+
+    public function members(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'project_members')
+            ->withPivot('role', 'joined_at')
+            ->withTimestamps();
+    }
+
+    public function projectMembers(): HasMany
     {
         return $this->hasMany(ProjectMember::class);
     }
@@ -100,13 +124,24 @@ class Project extends Model implements HasMedia
         return $this->hasMany(ProjectDocument::class);
     }
 
-    public function comments(): MorphMany
+    public function comments(): HasMany
     {
-        return $this->morphMany(ProjectComment::class, 'commentable');
+        return $this->hasMany(ProjectComment::class);
     }
 
     public function timeLogs(): HasMany
     {
         return $this->hasMany(TimeLog::class);
+    }
+
+    public function recalculateProgress(): void
+    {
+        $total = $this->tasks()->count();
+        if ($total === 0) {
+            $this->update(['progress_percent' => 0]);
+            return;
+        }
+        $done = $this->tasks()->where('status', 'done')->count();
+        $this->update(['progress_percent' => (int) round(($done / $total) * 100)]);
     }
 }

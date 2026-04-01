@@ -13,12 +13,23 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class LeadResource extends Resource
 {
     protected static ?string $model = Lead::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedFunnel;
+
+    protected static string | UnitEnum | null $navigationGroup = 'CRM';
+
+    protected static ?string $navigationLabel = 'Leads';
+
+    protected static ?int $navigationSort = 1;
+
+    protected static ?string $modelLabel = 'Lead';
+
+    protected static ?string $pluralModelLabel = 'Leads';
 
     public static function form(Schema $schema): Schema
     {
@@ -32,17 +43,15 @@ class LeadResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => ListLeads::route('/'),
+            'index'  => ListLeads::route('/'),
             'create' => CreateLead::route('/create'),
-            'edit' => EditLead::route('/{record}/edit'),
+            'edit'   => EditLead::route('/{record}/edit'),
         ];
     }
 }

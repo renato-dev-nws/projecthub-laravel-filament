@@ -2,9 +2,11 @@
 
 namespace App\Filament\TeamPanel\Resources\Services\Schemas;
 
-use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 class ServiceForm
@@ -13,24 +15,57 @@ class ServiceForm
     {
         return $schema
             ->components([
-                TextInput::make('name')
-                    ->required(),
-                TextInput::make('code')
-                    ->required(),
-                Textarea::make('description')
-                    ->columnSpanFull(),
-                TextInput::make('type')
-                    ->required()
-                    ->default('fixed'),
-                TextInput::make('default_price')
-                    ->required()
-                    ->numeric()
-                    ->default(0)
-                    ->prefix('$'),
-                TextInput::make('unit'),
-                Toggle::make('is_active')
-                    ->required(),
-                TextInput::make('category'),
+                Section::make('Dados do Serviço')
+                    ->schema([
+                        TextInput::make('name')
+                            ->label('Nome')
+                            ->required()
+                            ->maxLength(255),
+
+                        TextInput::make('code')
+                            ->label('Código')
+                            ->required()
+                            ->unique(ignoreRecord: true)
+                            ->maxLength(255),
+
+                        Select::make('category')
+                            ->label('Categoria')
+                            ->options([
+                                'development' => 'Desenvolvimento',
+                                'design'      => 'Design',
+                                'consulting'  => 'Consultoria',
+                                'support'     => 'Suporte',
+                                'training'    => 'Treinamento',
+                                'other'       => 'Outro',
+                            ]),
+
+                        TextInput::make('default_price')
+                            ->label('Preço Padrão')
+                            ->numeric()
+                            ->prefix('R$'),
+
+                        Select::make('type')
+                            ->label('Tipo de Cobrança')
+                            ->options([
+                                'hourly' => 'Por Hora',
+                                'fixed' => 'Preço Fixo',
+                                'monthly' => 'Mensal',
+                            ])
+                            ->default('fixed'),
+
+                        TextInput::make('unit_type')
+                            ->label('Unidade')
+                            ->maxLength(30),
+
+                        Toggle::make('is_active')
+                            ->label('Ativo')
+                            ->default(true),
+
+                        Textarea::make('description')
+                            ->label('Descrição')
+                            ->rows(3)
+                            ->columnSpanFull(),
+                        ])->columns(2),
             ]);
     }
 }

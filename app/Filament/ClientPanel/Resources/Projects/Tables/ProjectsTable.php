@@ -2,10 +2,7 @@
 
 namespace App\Filament\ClientPanel\Resources\Projects\Tables;
 
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
-use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -15,75 +12,46 @@ class ProjectsTable
     {
         return $table
             ->columns([
+                ColorColumn::make('color')
+                    ->label(''),
                 TextColumn::make('name')
-                    ->searchable(),
-                TextColumn::make('slug')
-                    ->searchable(),
+                    ->label('Projeto')
+                    ->searchable()
+                    ->sortable()
+                    ->weight('bold'),
                 TextColumn::make('code')
+                    ->label('Código')
+                    ->badge()
                     ->searchable(),
-                TextColumn::make('client_id')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('quote_id')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('project_manager_id')
-                    ->numeric()
-                    ->sortable(),
                 TextColumn::make('status')
-                    ->searchable(),
-                TextColumn::make('priority')
-                    ->searchable(),
+                    ->label('Status')
+                    ->badge()
+                    ->sortable(),
+                TextColumn::make('projectManager.name')
+                    ->label('Gerente')
+                    ->toggleable(),
                 TextColumn::make('start_date')
-                    ->date()
+                    ->label('Início')
+                    ->date('d/m/Y')
                     ->sortable(),
                 TextColumn::make('end_date')
-                    ->date()
-                    ->sortable(),
-                TextColumn::make('estimated_hours')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('logged_hours')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('budget')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('spent')
-                    ->numeric()
+                    ->label('Entrega')
+                    ->date('d/m/Y')
                     ->sortable(),
                 TextColumn::make('progress_percent')
-                    ->numeric()
+                    ->label('Progresso')
+                    ->suffix('%')
                     ->sortable(),
-                IconColumn::make('client_portal_enabled')
-                    ->boolean(),
-                IconColumn::make('client_can_comment')
-                    ->boolean(),
-                TextColumn::make('color')
-                    ->searchable(),
-                TextColumn::make('created_at')
-                    ->dateTime()
+                TextColumn::make('budget')
+                    ->label('Orçamento')
+                    ->money('BRL')
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('deleted_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(),
             ])
             ->filters([
                 //
             ])
-            ->recordActions([
-                EditAction::make(),
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
-            ]);
+            ->recordActions([])
+            ->toolbarActions([]);
     }
 }

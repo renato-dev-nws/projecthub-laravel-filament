@@ -15,16 +15,20 @@ class Service extends Model
         'name',
         'code',
         'description',
+        'type',
         'unit_type',
         'default_price',
         'is_active',
+        'category',
     ];
 
     protected function casts(): array
     {
         return [
+            'type' => 'string',
             'default_price' => 'decimal:2',
             'is_active' => 'boolean',
+            'category' => 'string',
         ];
     }
 

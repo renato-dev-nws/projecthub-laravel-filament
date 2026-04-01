@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -10,6 +11,19 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class ProjectComment extends Model
 {
     use SoftDeletes;
+
+    protected static function booted(): void
+    {
+        static::creating(function (ProjectComment $comment): void {
+            if (blank($comment->author_id) && Auth::check()) {
+                $comment->author_id = Auth::id();
+            }
+
+            if (blank($comment->author_type) && Auth::check()) {
+                $comment->author_type = User::class;
+            }
+        });
+    }
 
     protected $fillable = [
         'project_id',

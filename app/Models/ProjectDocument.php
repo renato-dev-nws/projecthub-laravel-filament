@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -11,6 +12,15 @@ use Spatie\Sluggable\SlugOptions;
 class ProjectDocument extends Model
 {
     use SoftDeletes, HasSlug;
+
+    protected static function booted(): void
+    {
+        static::creating(function (ProjectDocument $document): void {
+            if (blank($document->created_by) && Auth::check()) {
+                $document->created_by = Auth::id();
+            }
+        });
+    }
 
     protected $fillable = [
         'project_id',

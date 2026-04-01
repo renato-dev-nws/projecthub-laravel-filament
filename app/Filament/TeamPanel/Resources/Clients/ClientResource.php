@@ -13,12 +13,23 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class ClientResource extends Resource
 {
     protected static ?string $model = Client::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingOffice2;
+
+    protected static string | UnitEnum | null $navigationGroup = 'CRM';
+
+    protected static ?string $navigationLabel = 'Clientes';
+
+    protected static ?int $navigationSort = 2;
+
+    protected static ?string $modelLabel = 'Cliente';
+
+    protected static ?string $pluralModelLabel = 'Clientes';
 
     public static function form(Schema $schema): Schema
     {
@@ -32,17 +43,15 @@ class ClientResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => ListClients::route('/'),
+            'index'  => ListClients::route('/'),
             'create' => CreateClient::route('/create'),
-            'edit' => EditClient::route('/{record}/edit'),
+            'edit'   => EditClient::route('/{record}/edit'),
         ];
     }
 }

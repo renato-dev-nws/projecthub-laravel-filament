@@ -26,6 +26,21 @@ class QuoteItem extends Model
         ];
     }
 
+    protected static function booted(): void
+    {
+        static::saving(function (QuoteItem $quoteItem): void {
+            $quoteItem->subtotal = (float) $quoteItem->quantity * (float) $quoteItem->unit_price;
+        });
+
+        static::saved(function (QuoteItem $quoteItem): void {
+            $quoteItem->quote?->recalculateTotals();
+        });
+
+        static::deleted(function (QuoteItem $quoteItem): void {
+            $quoteItem->quote?->recalculateTotals();
+        });
+    }
+
     // Relationships
     public function quote(): BelongsTo
     {

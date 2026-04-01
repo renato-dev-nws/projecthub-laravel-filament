@@ -26,7 +26,6 @@ class ClientPanelProvider extends PanelProvider
             ->login()
             ->colors(['primary' => Color::Blue])
             ->brandName('Meus Projetos')
-            // ->authModel(\App\Models\ClientPortalUser::class)  // Descomentar após criar o model
             ->authGuard('client_portal')
             ->discoverResources(
                 in: app_path('Filament/ClientPanel/Resources'),

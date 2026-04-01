@@ -6,6 +6,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class QuotesTable
@@ -15,67 +16,61 @@ class QuotesTable
         return $table
             ->columns([
                 TextColumn::make('number')
-                    ->searchable(),
-                TextColumn::make('client_id')
-                    ->numeric()
+                    ->label('Número')
+                    ->badge()
+                    ->searchable()
                     ->sortable(),
-                TextColumn::make('lead_id')
-                    ->numeric()
+                TextColumn::make('client.company_name')
+                    ->label('Cliente')
+                    ->searchable()
                     ->sortable(),
-                TextColumn::make('created_by')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('title')
-                    ->searchable(),
                 TextColumn::make('status')
-                    ->searchable(),
-                TextColumn::make('subtotal')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('discount_percent')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('discount_value')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('tax_percent')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('tax_value')
-                    ->numeric()
-                    ->sortable(),
+                    ->label('Status')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'draft'    => 'gray',
+                        'sent'     => 'info',
+                        'approved' => 'success',
+                        'rejected' => 'danger',
+                        'expired'  => 'warning',
+                        default    => 'gray',
+                    })
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'draft'    => 'Rascunho',
+                        'sent'     => 'Enviado',
+                        'approved' => 'Aprovado',
+                        'rejected' => 'Rejeitado',
+                        'expired'  => 'Expirado',
+                        default    => $state,
+                    }),
                 TextColumn::make('total')
-                    ->numeric()
+                    ->label('Total')
+                    ->money('BRL')
                     ->sortable(),
-                TextColumn::make('currency')
-                    ->searchable(),
                 TextColumn::make('valid_until')
-                    ->date()
+                    ->label('Válido até')
+                    ->date('d/m/Y')
                     ->sortable(),
-                TextColumn::make('sent_at')
-                    ->dateTime()
-                    ->sortable(),
-                TextColumn::make('viewed_at')
-                    ->dateTime()
-                    ->sortable(),
-                TextColumn::make('approved_at')
-                    ->dateTime()
-                    ->sortable(),
+                TextColumn::make('creator.name')
+                    ->label('Criado por')
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('deleted_at')
-                    ->dateTime()
+                    ->label('Criado em')
+                    ->date('d/m/Y')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('status')
+                    ->label('Status')
+                    ->options([
+                        'draft'    => 'Rascunho',
+                        'sent'     => 'Enviado',
+                        'approved' => 'Aprovado',
+                        'rejected' => 'Rejeitado',
+                        'expired'  => 'Expirado',
+                    ]),
             ])
             ->recordActions([
                 EditAction::make(),

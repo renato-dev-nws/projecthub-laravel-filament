@@ -33,10 +33,10 @@ class TeamPanelProvider extends PanelProvider
             ->brandName('ProjectHub — Admin')
             ->favicon(asset('favicon.ico'))
             ->navigationGroups([
-                NavigationGroup::make('CRM')->icon('heroicon-o-users'),
-                NavigationGroup::make('Projetos')->icon('heroicon-o-folder'),
-                NavigationGroup::make('Financeiro')->icon('heroicon-o-currency-dollar'),
-                NavigationGroup::make('Configurações')->icon('heroicon-o-cog-6-tooth'),
+                NavigationGroup::make('CRM'),
+                NavigationGroup::make('Projetos'),
+                NavigationGroup::make('Financeiro'),
+                NavigationGroup::make('Configurações'),
             ])
             ->discoverResources(
                 in: app_path('Filament/TeamPanel/Resources'),
@@ -63,9 +63,5 @@ class TeamPanelProvider extends PanelProvider
             ])
             ->authMiddleware([Authenticate::class])
             ->authGuard('web');
-            // ->plugins([
-            //     \Filament\SpatieLaravelMediaLibraryPlugin\MediaLibraryPlugin::make(),
-            //     \Filament\SpatieLaravelTagsPlugin\TagsPlugin::make(),
-            // ]);
     }
 }

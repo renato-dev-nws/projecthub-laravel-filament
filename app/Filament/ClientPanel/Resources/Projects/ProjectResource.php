@@ -9,6 +9,7 @@ use App\Filament\ClientPanel\Resources\Projects\Schemas\ProjectForm;
 use App\Filament\ClientPanel\Resources\Projects\Tables\ProjectsTable;
 use App\Models\Project;
 use BackedEnum;
+use Illuminate\Database\Eloquent\Builder;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -19,6 +20,32 @@ class ProjectResource extends Resource
     protected static ?string $model = Project::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+
+    protected static ?string $navigationLabel = 'Meus Projetos';
+
+    public static function getEloquentQuery(): Builder
+    {
+        $clientId = auth('client_portal')->user()?->client_id;
+
+        return parent::getEloquentQuery()
+            ->where('client_id', $clientId)
+            ->where('client_portal_enabled', true);
+    }
+
+    public static function canCreate(): bool
+    {
+        return false;
+    }
+
+    public static function canEdit($record): bool
+    {
+        return false;
+    }
+
+    public static function canDelete($record): bool
+    {
+        return false;
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -41,8 +68,6 @@ class ProjectResource extends Resource
     {
         return [
             'index' => ListProjects::route('/'),
-            'create' => CreateProject::route('/create'),
-            'edit' => EditProject::route('/{record}/edit'),
         ];
     }
 }

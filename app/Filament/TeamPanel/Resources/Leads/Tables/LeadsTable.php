@@ -6,6 +6,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class LeadsTable
@@ -15,50 +16,85 @@ class LeadsTable
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label('Nome')
+                    ->searchable()
+                    ->sortable()
+                    ->weight('bold'),
+                TextColumn::make('company')
+                    ->label('Empresa')
                     ->searchable(),
                 TextColumn::make('email')
-                    ->label('Email address')
-                    ->searchable(),
-                TextColumn::make('phone')
-                    ->searchable(),
-                TextColumn::make('company')
-                    ->searchable(),
-                TextColumn::make('source')
-                    ->searchable(),
+                    ->label('Email')
+                    ->searchable()
+                    ->toggleable(),
                 TextColumn::make('status')
-                    ->searchable(),
+                    ->label('Status')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'new'           => 'gray',
+                        'contacted'     => 'info',
+                        'qualified'     => 'warning',
+                        'proposal_sent' => 'primary',
+                        'negotiation'   => 'success',
+                        'converted'     => 'success',
+                        'lost'          => 'danger',
+                        default         => 'gray',
+                    })
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'new'           => 'Novo',
+                        'contacted'     => 'Contactado',
+                        'qualified'     => 'Qualificado',
+                        'proposal_sent' => 'Proposta Enviada',
+                        'negotiation'   => 'Negociação',
+                        'converted'     => 'Convertido',
+                        'lost'          => 'Perdido',
+                        default         => $state,
+                    }),
                 TextColumn::make('priority')
-                    ->searchable(),
+                    ->label('Prioridade')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'low' => 'gray',
+                        'medium' => 'info',
+                        'high' => 'warning',
+                        default => 'gray',
+                    })
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'low' => 'Baixa',
+                        'medium' => 'Média',
+                        'high' => 'Alta',
+                        default => $state,
+                    }),
                 TextColumn::make('estimated_value')
-                    ->numeric()
+                    ->label('Valor')
+                    ->money('BRL')
                     ->sortable(),
+                TextColumn::make('assignedTo.name')
+                    ->label('Responsável')
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('expected_close_date')
-                    ->date()
+                    ->label('Fechamento')
+                    ->date('d/m/Y')
                     ->sortable(),
-                TextColumn::make('assigned_to')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('converted_client_id')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('converted_at')
-                    ->dateTime()
-                    ->sortable(),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('deleted_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('status')
+                    ->label('Status')
+                    ->options([
+                        'new'           => 'Novo',
+                        'contacted'     => 'Contactado',
+                        'qualified'     => 'Qualificado',
+                        'proposal_sent' => 'Proposta Enviada',
+                        'negotiation'   => 'Negociação',
+                    ]),
+                SelectFilter::make('priority')
+                    ->label('Prioridade')
+                    ->options([
+                        'low' => 'Baixa',
+                        'medium' => 'Média',
+                        'high' => 'Alta',
+                    ]),
             ])
             ->recordActions([
                 EditAction::make(),

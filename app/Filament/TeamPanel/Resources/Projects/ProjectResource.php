@@ -13,12 +13,23 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class ProjectResource extends Resource
 {
     protected static ?string $model = Project::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedFolderOpen;
+
+    protected static string | UnitEnum | null $navigationGroup = 'Projetos';
+
+    protected static ?string $navigationLabel = 'Projetos';
+
+    protected static ?int $navigationSort = 1;
+
+    protected static ?string $modelLabel = 'Projeto';
+
+    protected static ?string $pluralModelLabel = 'Projetos';
 
     public static function form(Schema $schema): Schema
     {
@@ -45,9 +56,9 @@ class ProjectResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListProjects::route('/'),
+            'index'  => ListProjects::route('/'),
             'create' => CreateProject::route('/create'),
-            'edit' => EditProject::route('/{record}/edit'),
+            'edit'   => EditProject::route('/{record}/edit'),
         ];
     }
 }

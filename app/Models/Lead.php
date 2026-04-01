@@ -23,8 +23,10 @@ class Lead extends Model
         'website',
         'source',
         'status',
+        'priority',
         'estimated_value',
-        'notes',
+        'description',
+        'expected_close_date',
         'assigned_to',
         'converted_client_id',
         'converted_at',
@@ -34,7 +36,9 @@ class Lead extends Model
     {
         return [
             'status' => 'string',
+            'priority' => 'string',
             'estimated_value' => 'decimal:2',
+            'expected_close_date' => 'date',
             'converted_at' => 'datetime',
         ];
     }
@@ -48,6 +52,11 @@ class Lead extends Model
 
     // Relationships
     public function assignedUser(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'assigned_to');
+    }
+
+    public function assignedTo(): BelongsTo
     {
         return $this->belongsTo(User::class, 'assigned_to');
     }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -11,6 +12,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class ProjectTask extends Model
 {
     use SoftDeletes;
+
+    protected static function booted(): void
+    {
+        static::creating(function (ProjectTask $task): void {
+            if (blank($task->created_by) && Auth::check()) {
+                $task->created_by = Auth::id();
+            }
+        });
+    }
 
     protected $fillable = [
         'project_id',

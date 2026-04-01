@@ -5,8 +5,9 @@ namespace App\Filament\TeamPanel\Resources\Projects\Tables;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class ProjectsTable
@@ -15,67 +16,68 @@ class ProjectsTable
     {
         return $table
             ->columns([
-                TextColumn::make('name')
-                    ->searchable(),
-                TextColumn::make('slug')
-                    ->searchable(),
+                ColorColumn::make('color')
+                    ->label(''),
                 TextColumn::make('code')
+                    ->label('Código')
+                    ->badge()
                     ->searchable(),
-                TextColumn::make('client_id')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('quote_id')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('project_manager_id')
-                    ->numeric()
+                TextColumn::make('name')
+                    ->label('Projeto')
+                    ->searchable()
+                    ->sortable()
+                    ->weight('bold'),
+                TextColumn::make('client.company_name')
+                    ->label('Cliente')
+                    ->searchable()
                     ->sortable(),
                 TextColumn::make('status')
-                    ->searchable(),
-                TextColumn::make('priority')
-                    ->searchable(),
-                TextColumn::make('start_date')
-                    ->date()
-                    ->sortable(),
-                TextColumn::make('end_date')
-                    ->date()
-                    ->sortable(),
-                TextColumn::make('estimated_hours')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('logged_hours')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('budget')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('spent')
-                    ->numeric()
+                    ->label('Status')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'planning'  => 'info',
+                        'active'    => 'success',
+                        'on_hold'   => 'warning',
+                        'completed' => 'gray',
+                        'cancelled' => 'danger',
+                        default     => 'gray',
+                    })
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'planning'  => 'Planejamento',
+                        'active'    => 'Em Andamento',
+                        'on_hold'   => 'Pausado',
+                        'completed' => 'Concluído',
+                        'cancelled' => 'Cancelado',
+                        default     => $state,
+                    }),
+                TextColumn::make('projectManager.name')
+                    ->label('Gerente')
                     ->sortable(),
                 TextColumn::make('progress_percent')
-                    ->numeric()
+                    ->label('Progresso')
+                    ->formatStateUsing(fn (int $state): string => "{$state}%")
                     ->sortable(),
-                IconColumn::make('client_portal_enabled')
-                    ->boolean(),
-                IconColumn::make('client_can_comment')
-                    ->boolean(),
-                TextColumn::make('color')
-                    ->searchable(),
+                TextColumn::make('end_date')
+                    ->label('Entrega')
+                    ->date('d/m/Y')
+                    ->sortable(),
                 TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('status')
+                    ->label('Status')
+                    ->options([
+                        'planning'  => 'Planejamento',
+                        'active'    => 'Em Andamento',
+                        'on_hold'   => 'Pausado',
+                        'completed' => 'Concluído',
+                    ]),
+                SelectFilter::make('project_manager_id')
+                    ->label('Gerente')
+                    ->relationship('projectManager', 'name'),
             ])
             ->recordActions([
                 EditAction::make(),
