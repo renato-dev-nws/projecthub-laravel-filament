@@ -76,8 +76,10 @@ class ProjectTaskObserverTest extends TestCase
             'status'     => 'done',
         ]);
 
-        // Force progress to 0 directly to detect unwanted recalculation
-        $this->project->update(['progress_percent' => 0]);
+        // Force progress to 0 directly in DB to detect unwanted recalculation
+        \Illuminate\Support\Facades\DB::table('projects')
+            ->where('id', $this->project->id)
+            ->update(['progress_percent' => 0]);
 
         // Changing a non-status field should NOT trigger recalculation
         $task->update(['title' => 'Task A (renamed)']);

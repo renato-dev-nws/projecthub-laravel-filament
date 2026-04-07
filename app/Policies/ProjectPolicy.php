@@ -4,26 +4,43 @@ namespace App\Policies;
 
 use App\Models\Project;
 use App\Models\User;
+use App\Models\ClientPortalUser;
 
 class ProjectPolicy
 {
-    public function viewAny(User $user): bool
+    public function viewAny($user): bool
     {
-        return $user->hasAnyRole(['Super Admin', 'Admin', 'Project Manager', 'Developer', 'Designer', 'Account Manager']);
+        if ($user instanceof User) {
+            return $user->hasAnyRole(['Super Admin', 'Admin', 'Project Manager', 'Developer', 'Designer', 'Account Manager']);
+        }
+
+        if ($user instanceof ClientPortalUser) {
+            return true; // Filtrado via getEloquentQuery no Resource
+        }
+
+        return false;
     }
 
-    public function view(User $user, Project $project): bool
+    public function view($user, Project $project): bool
     {
-        if ($user->hasAnyRole(['Super Admin', 'Admin', 'Account Manager'])) {
-            return true;
+        if ($user instanceof User) {
+            if ($user->hasAnyRole(['Super Admin', 'Admin', 'Account Manager'])) {
+                return true;
+            }
+
+            if ($user->hasRole('Project Manager')) {
+                return true; // vê todos para gestão
+            }
+
+            // Developer/Designer vê apenas projetos onde é membro
+            return $project->members()->where('user_id', $user->id)->exists();
         }
 
-        if ($user->hasRole('Project Manager')) {
-            return true; // vê todos para gestão
+        if ($user instanceof ClientPortalUser) {
+            return $project->client_id === $user->client_id && $project->client_portal_enabled;
         }
 
-        // Developer/Designer vê apenas projetos onde é membro
-        return $project->members()->where('user_id', $user->id)->exists();
+        return false;
     }
 
     public function create(User $user): bool

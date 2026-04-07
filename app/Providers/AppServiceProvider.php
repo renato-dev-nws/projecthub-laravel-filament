@@ -16,8 +16,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Super Admin ultrapassa todas as policies
-        Gate::before(function (User $user, string $ability) {
-            if ($user->hasRole('Super Admin')) {
+        Gate::before(function ($user, string $ability) {
+            if ($user instanceof User && $user->hasRole('Super Admin')) {
                 return true;
             }
         });
