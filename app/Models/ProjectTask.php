@@ -3,12 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Observers\ProjectTaskObserver;
 
+#[ObservedBy(ProjectTaskObserver::class)]
 class ProjectTask extends Model
 {
     use SoftDeletes;
