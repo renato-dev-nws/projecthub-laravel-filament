@@ -43,32 +43,52 @@ class ProjectPolicy
         return false;
     }
 
-    public function create(User $user): bool
+    public function create($user): bool
     {
-        return $user->hasAnyRole(['Super Admin', 'Admin', 'Project Manager']);
-    }
-
-    public function update(User $user, Project $project): bool
-    {
-        if ($user->hasAnyRole(['Super Admin', 'Admin'])) {
-            return true;
+        if ($user instanceof User) {
+            return $user->hasAnyRole(['Super Admin', 'Admin', 'Project Manager']);
         }
 
-        return $user->hasRole('Project Manager') && $project->project_manager_id === $user->id;
+        return false;
     }
 
-    public function delete(User $user, Project $project): bool
+    public function update($user, Project $project): bool
     {
-        return $user->hasAnyRole(['Super Admin', 'Admin']);
+        if ($user instanceof User) {
+            if ($user->hasAnyRole(['Super Admin', 'Admin'])) {
+                return true;
+            }
+
+            return $user->hasRole('Project Manager') && $project->project_manager_id === $user->id;
+        }
+
+        return false;
     }
 
-    public function restore(User $user, Project $project): bool
+    public function delete($user, Project $project): bool
     {
-        return $user->hasAnyRole(['Super Admin', 'Admin']);
+        if ($user instanceof User) {
+            return $user->hasAnyRole(['Super Admin', 'Admin']);
+        }
+
+        return false;
     }
 
-    public function forceDelete(User $user, Project $project): bool
+    public function restore($user, Project $project): bool
     {
-        return $user->hasRole('Super Admin');
+        if ($user instanceof User) {
+            return $user->hasAnyRole(['Super Admin', 'Admin']);
+        }
+
+        return false;
+    }
+
+    public function forceDelete($user, Project $project): bool
+    {
+        if ($user instanceof User) {
+            return $user->hasRole('Super Admin');
+        }
+
+        return false;
     }
 }
