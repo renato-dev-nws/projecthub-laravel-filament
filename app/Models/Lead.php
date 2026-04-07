@@ -21,6 +21,7 @@ class Lead extends Model
         'email',
         'phone',
         'website',
+        'referral_url',
         'source',
         'status',
         'priority',

@@ -13,59 +13,54 @@ class ServiceForm
 {
     public static function configure(Schema $schema): Schema
     {
-        return $schema
-            ->components([
-                Section::make('Dados do Serviço')
-                    ->schema([
-                        TextInput::make('name')
-                            ->label('Nome')
-                            ->required()
-                            ->maxLength(255),
+        return $schema->columns(2)->components([
+            Section::make('Dados do Serviço')
+                ->schema([
+                    TextInput::make('name')
+                        ->label('Nome')
+                        ->required()
+                        ->maxLength(255),
+                    TextInput::make('code')
+                        ->label('Código')
+                        ->required()
+                        ->unique(ignoreRecord: true)
+                        ->maxLength(255),
+                    Select::make('category')
+                        ->label('Categoria')
+                        ->options([
+                            'development' => 'Desenvolvimento',
+                            'design'      => 'Design',
+                            'consulting'  => 'Consultoria',
+                            'support'     => 'Suporte',
+                            'training'    => 'Treinamento',
+                            'other'       => 'Outro',
+                        ]),
+                    TextInput::make('default_price')
+                        ->label('Preço Padrão / Hora')
+                        ->numeric()
+                        ->prefix('R$'),
+                    Select::make('type')
+                        ->label('Tipo de Cobrança')
+                        ->options([
+                            'hourly'  => 'Por Hora',
+                            'fixed'   => 'Preço Fixo',
+                            'monthly' => 'Mensal',
+                        ])
+                        ->default('fixed'),
+                    TextInput::make('unit_type')
+                        ->label('Unidade')
+                        ->maxLength(30),
+                    Toggle::make('is_active')
+                        ->label('Ativo')
+                        ->default(true),
+                ]),
 
-                        TextInput::make('code')
-                            ->label('Código')
-                            ->required()
-                            ->unique(ignoreRecord: true)
-                            ->maxLength(255),
-
-                        Select::make('category')
-                            ->label('Categoria')
-                            ->options([
-                                'development' => 'Desenvolvimento',
-                                'design'      => 'Design',
-                                'consulting'  => 'Consultoria',
-                                'support'     => 'Suporte',
-                                'training'    => 'Treinamento',
-                                'other'       => 'Outro',
-                            ]),
-
-                        TextInput::make('default_price')
-                            ->label('Preço Padrão')
-                            ->numeric()
-                            ->prefix('R$'),
-
-                        Select::make('type')
-                            ->label('Tipo de Cobrança')
-                            ->options([
-                                'hourly' => 'Por Hora',
-                                'fixed' => 'Preço Fixo',
-                                'monthly' => 'Mensal',
-                            ])
-                            ->default('fixed'),
-
-                        TextInput::make('unit_type')
-                            ->label('Unidade')
-                            ->maxLength(30),
-
-                        Toggle::make('is_active')
-                            ->label('Ativo')
-                            ->default(true),
-
-                        Textarea::make('description')
-                            ->label('Descrição')
-                            ->rows(3)
-                            ->columnSpanFull(),
-                        ])->columns(2),
-            ]);
+            Section::make('Descrição')
+                ->schema([
+                    Textarea::make('description')
+                        ->label('Descrição')
+                        ->rows(8),
+                ]),
+        ]);
     }
 }

@@ -9,9 +9,11 @@ class QuoteItem extends Model
 {
     protected $fillable = [
         'quote_id',
+        'quote_phase_id',
         'service_id',
         'description',
         'quantity',
+        'hours',
         'unit_price',
         'subtotal',
         'sort_order',
@@ -20,9 +22,10 @@ class QuoteItem extends Model
     protected function casts(): array
     {
         return [
-            'quantity' => 'decimal:2',
+            'quantity'  => 'decimal:2',
+            'hours'     => 'decimal:2',
             'unit_price' => 'decimal:2',
-            'subtotal' => 'decimal:2',
+            'subtotal'  => 'decimal:2',
         ];
     }
 
@@ -45,6 +48,11 @@ class QuoteItem extends Model
     public function quote(): BelongsTo
     {
         return $this->belongsTo(Quote::class);
+    }
+
+    public function quotePhase(): BelongsTo
+    {
+        return $this->belongsTo(QuotePhase::class);
     }
 
     public function service(): BelongsTo

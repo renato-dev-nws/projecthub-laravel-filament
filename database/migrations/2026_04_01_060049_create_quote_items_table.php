@@ -14,9 +14,11 @@ return new class extends Migration
         Schema::create('quote_items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('quote_id')->constrained()->cascadeOnDelete();
+            $table->unsignedBigInteger('quote_phase_id')->nullable()->index();
             $table->foreignId('service_id')->nullable()->constrained();
             $table->string('description');
             $table->decimal('quantity', 10, 2)->default(1);
+            $table->decimal('hours', 10, 2)->default(0);
             $table->string('unit', 30)->nullable();
             $table->decimal('unit_price', 15, 2)->default(0);
             $table->decimal('discount_percent', 5, 2)->default(0);

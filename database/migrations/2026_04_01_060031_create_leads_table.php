@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('phone', 20)->nullable();
             $table->string('company')->nullable();
+            $table->string('website')->nullable();
+            $table->string('referral_url')->nullable();
             $table->string('source')->nullable();
             $table->enum('status', [
                 'new', 'contacted', 'qualified', 'proposal_sent',

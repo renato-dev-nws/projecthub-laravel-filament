@@ -4,6 +4,7 @@ namespace App\Filament\TeamPanel\Resources\Leads;
 
 use App\Filament\TeamPanel\Resources\Leads\Pages\CreateLead;
 use App\Filament\TeamPanel\Resources\Leads\Pages\EditLead;
+use App\Filament\TeamPanel\Resources\Leads\Pages\LeadKanban;
 use App\Filament\TeamPanel\Resources\Leads\Pages\ListLeads;
 use App\Filament\TeamPanel\Resources\Leads\Schemas\LeadForm;
 use App\Filament\TeamPanel\Resources\Leads\Tables\LeadsTable;
@@ -52,6 +53,7 @@ class LeadResource extends Resource
             'index'  => ListLeads::route('/'),
             'create' => CreateLead::route('/create'),
             'edit'   => EditLead::route('/{record}/edit'),
+            'kanban' => LeadKanban::route('/kanban'),
         ];
     }
 }

@@ -77,6 +77,11 @@ class Quote extends Model
         return $this->hasMany(QuoteItem::class);
     }
 
+    public function phases(): HasMany
+    {
+        return $this->hasMany(QuotePhase::class)->orderBy('sort_order');
+    }
+
     public function recalculateTotals(): void
     {
         $subtotal = (float) $this->items()->sum('subtotal');

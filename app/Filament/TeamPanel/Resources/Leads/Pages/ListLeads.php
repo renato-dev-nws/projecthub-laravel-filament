@@ -10,6 +10,8 @@ class ListLeads extends ListRecords
 {
     protected static string $resource = LeadResource::class;
 
+    protected static ?string $navigationLabel = 'Lista';
+
     protected function getHeaderActions(): array
     {
         return [

@@ -31,8 +31,9 @@ class TeamPanelProvider extends PanelProvider
                 'primary' => Color::Cyan,
                 'gray'    => Color::Slate,
             ])
-            ->brandName('ProjectHub — Admin')
-            ->favicon(asset('favicon.ico'))
+            ->brandLogo(fn () => view('filament.brand'))
+            ->brandLogoHeight('2rem')
+            ->favicon(asset('img/icon.svg'))
             ->navigationGroups([
                 NavigationGroup::make('CRM'),
                 NavigationGroup::make('Projetos'),

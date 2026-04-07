@@ -11,38 +11,35 @@ class UserForm
 {
     public static function configure(Schema $schema): Schema
     {
-        return $schema
-            ->components([
-                Section::make('Dados do Usuário')
-                    ->schema([
-                        TextInput::make('name')
-                            ->label('Nome')
-                            ->required()
-                            ->maxLength(255),
+        return $schema->columns(2)->components([
+            Section::make('Dados do Usuário')
+                ->schema([
+                    TextInput::make('name')
+                        ->label('Nome')
+                        ->required()
+                        ->maxLength(255),
+                    TextInput::make('email')
+                        ->label('E-mail')
+                        ->email()
+                        ->required()
+                        ->unique(ignoreRecord: true)
+                        ->maxLength(255),
+                    TextInput::make('password')
+                        ->label('Senha')
+                        ->password()
+                        ->dehydrateStateUsing(fn ($state) => bcrypt($state))
+                        ->dehydrated(fn ($state) => filled($state))
+                        ->required(fn (string $operation): bool => $operation === 'create'),
+                ]),
 
-                        TextInput::make('email')
-                            ->label('Email')
-                            ->email()
-                            ->required()
-                            ->unique(ignoreRecord: true)
-                            ->maxLength(255),
-
-                        TextInput::make('password')
-                            ->label('Senha')
-                            ->password()
-                            ->dehydrateStateUsing(fn ($state) => bcrypt($state))
-                            ->dehydrated(fn ($state) => filled($state))
-                            ->required(fn (string $operation): bool => $operation === 'create'),
-                    ])->columns(2),
-
-                Section::make('Permissões')
-                    ->schema([
-                        Select::make('roles')
-                            ->label('Roles')
-                            ->multiple()
-                            ->relationship('roles', 'name')
-                            ->preload(),
-                    ]),
-            ]);
+            Section::make('Permissões')
+                ->schema([
+                    Select::make('roles')
+                        ->label('Funções')
+                        ->multiple()
+                        ->relationship('roles', 'name')
+                        ->preload(),
+                ]),
+        ]);
     }
 }
