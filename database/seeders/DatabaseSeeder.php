@@ -37,6 +37,9 @@ class DatabaseSeeder extends Seeder
         // Clientes
         $this->call(ClientSeeder::class);
 
+        // Usuários do portal do cliente
+        $this->call(ClientPortalUserSeeder::class);
+
         // Projetos
         $this->call(ProjectSeeder::class);
 
