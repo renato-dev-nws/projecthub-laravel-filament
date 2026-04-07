@@ -15,13 +15,12 @@ return new class extends Migration
             $table->id();
             $table->foreignId('quote_id')->constrained()->cascadeOnDelete();
             $table->foreignId('service_id')->nullable()->constrained();
-            $table->string('name');
-            $table->text('description')->nullable();
+            $table->string('description');
             $table->decimal('quantity', 10, 2)->default(1);
             $table->string('unit', 30)->nullable();
             $table->decimal('unit_price', 15, 2)->default(0);
             $table->decimal('discount_percent', 5, 2)->default(0);
-            $table->decimal('total', 15, 2)->default(0);
+            $table->decimal('subtotal', 15, 2)->default(0);
             $table->integer('sort_order')->default(0);
             $table->timestamps();
         });

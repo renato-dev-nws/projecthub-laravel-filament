@@ -10,6 +10,7 @@ use Filament\Navigation\NavigationGroup;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\Support\Enums\Width;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -27,7 +28,7 @@ class TeamPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->colors([
-                'primary' => Color::Indigo,
+                'primary' => Color::Cyan,
                 'gray'    => Color::Slate,
             ])
             ->brandName('ProjectHub — Admin')
@@ -62,6 +63,7 @@ class TeamPanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
             ])
             ->authMiddleware([Authenticate::class])
+            ->maxContentWidth(Width::Full)
             ->authGuard('web');
     }
 }

@@ -39,5 +39,11 @@ class DatabaseSeeder extends Seeder
 
         // Projetos
         $this->call(ProjectSeeder::class);
+
+        // Leads
+        $this->call(LeadSeeder::class);
+
+        // Propostas
+        $this->call(QuoteSeeder::class);
     }
 }

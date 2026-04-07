@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('quotes', function (Blueprint $table) {
             $table->id();
             $table->string('number')->unique();
-            $table->foreignId('client_id')->constrained();
+            $table->foreignId('client_id')->nullable()->constrained();
             $table->foreignId('lead_id')->nullable()->constrained();
             $table->foreignId('created_by')->constrained('users');
             $table->string('title');
