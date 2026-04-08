@@ -21,6 +21,7 @@ class RoleAndPermissionSeeder extends Seeder
             'Developer',
             'Designer',
             'Account Manager',
+            'Financial',
         ];
 
         foreach ($roles as $role) {

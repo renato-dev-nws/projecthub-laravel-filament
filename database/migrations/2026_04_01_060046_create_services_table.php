@@ -20,6 +20,7 @@ return new class extends Migration
             $table->decimal('default_price', 15, 2)->default(0);
             $table->string('unit_type', 30)->nullable();
             $table->boolean('is_active')->default(true);
+            $table->unsignedBigInteger('service_category_id')->nullable()->index();
             $table->string('category')->nullable();
             $table->timestamps();
             $table->softDeletes();

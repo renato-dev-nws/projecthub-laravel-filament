@@ -28,6 +28,10 @@ return new class extends Migration
             $table->index('project_id');
             $table->index('is_public');
         });
+
+        Schema::table('project_tasks', function (Blueprint $table) {
+            $table->foreign('roadmap_item_id')->references('id')->on('roadmap_items')->nullOnDelete();
+        });
     }
 
     /**
@@ -35,6 +39,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('project_tasks', function (Blueprint $table) {
+            $table->dropForeign(['roadmap_item_id']);
+        });
+
         Schema::dropIfExists('roadmap_items');
     }
 };

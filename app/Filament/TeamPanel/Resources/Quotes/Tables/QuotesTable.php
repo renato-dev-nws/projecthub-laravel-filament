@@ -5,6 +5,7 @@ namespace App\Filament\TeamPanel\Resources\Quotes\Tables;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -73,6 +74,12 @@ class QuotesTable
                     ]),
             ])
             ->recordActions([
+                Action::make('download_pdf')
+                    ->label('PDF')
+                    ->icon(\Filament\Support\Icons\Heroicon::OutlinedDocumentArrowDown)
+                    ->url(fn (\App\Models\Quote $record) => route('quotes.pdf', $record))
+                    ->openUrlInNewTab()
+                    ->color('gray'),
                 EditAction::make(),
             ])
             ->toolbarActions([

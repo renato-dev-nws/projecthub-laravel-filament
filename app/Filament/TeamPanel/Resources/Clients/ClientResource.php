@@ -5,6 +5,7 @@ namespace App\Filament\TeamPanel\Resources\Clients;
 use App\Filament\TeamPanel\Resources\Clients\Pages\CreateClient;
 use App\Filament\TeamPanel\Resources\Clients\Pages\EditClient;
 use App\Filament\TeamPanel\Resources\Clients\Pages\ListClients;
+use App\Filament\TeamPanel\Resources\Clients\Pages\ViewClient;
 use App\Filament\TeamPanel\Resources\Clients\Schemas\ClientForm;
 use App\Filament\TeamPanel\Resources\Clients\Tables\ClientsTable;
 use App\Models\Client;
@@ -43,7 +44,12 @@ class ClientResource extends Resource
 
     public static function getRelations(): array
     {
-        return [];
+        return [
+            RelationManagers\ContactsRelationManager::class,
+            RelationManagers\ProjectsRelationManager::class,
+            RelationManagers\QuotesRelationManager::class,
+            RelationManagers\PortalUsersRelationManager::class,
+        ];
     }
 
     public static function getPages(): array
@@ -52,6 +58,7 @@ class ClientResource extends Resource
             'index'  => ListClients::route('/'),
             'create' => CreateClient::route('/create'),
             'edit'   => EditClient::route('/{record}/edit'),
+            'view'   => ViewClient::route('/{record}'),
         ];
     }
 }

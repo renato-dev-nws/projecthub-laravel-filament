@@ -25,15 +25,14 @@ class ServiceForm
                         ->required()
                         ->unique(ignoreRecord: true)
                         ->maxLength(255),
-                    Select::make('category')
+                    Select::make('service_category_id')
                         ->label('Categoria')
-                        ->options([
-                            'development' => 'Desenvolvimento',
-                            'design'      => 'Design',
-                            'consulting'  => 'Consultoria',
-                            'support'     => 'Suporte',
-                            'training'    => 'Treinamento',
-                            'other'       => 'Outro',
+                        ->relationship('serviceCategory', 'name')
+                        ->searchable()
+                        ->preload()
+                        ->createOptionForm([
+                            \Filament\Forms\Components\TextInput::make('name')->label('Nome')->required(),
+                            \Filament\Forms\Components\ColorPicker::make('color')->label('Cor'),
                         ]),
                     TextInput::make('default_price')
                         ->label('Preço Padrão / Hora')

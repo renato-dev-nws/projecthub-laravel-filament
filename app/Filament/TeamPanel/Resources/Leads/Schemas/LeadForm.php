@@ -46,16 +46,16 @@ class LeadForm
 
             Section::make('Qualificação')
                 ->schema([
-                    Select::make('source')
+                    Select::make('lead_source_id')
                         ->label('Origem')
-                        ->options([
-                            'website'   => 'Website',
-                            'referral'  => 'Indicação',
-                            'linkedin'  => 'LinkedIn',
-                            'google'    => 'Google Ads',
-                            'event'     => 'Evento',
-                            'cold_call' => 'Cold Call',
-                            'other'     => 'Outro',
+                        ->relationship('leadSource', 'name')
+                        ->searchable()
+                        ->preload()
+                        ->createOptionForm([
+                            \Filament\Forms\Components\TextInput::make('name')->label('Nome')->required(),
+                            \Filament\Forms\Components\TextInput::make('slug')->label('Slug')
+                                ->required()
+                                ->unique(\App\Models\LeadSource::class, 'slug', ignoreRecord: true),
                         ]),
                     Select::make('status')
                         ->label('Status')

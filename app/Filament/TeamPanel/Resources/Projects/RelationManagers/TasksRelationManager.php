@@ -31,6 +31,16 @@ class TasksRelationManager extends RelationManager
                     ->relationship('phase', 'name')
                     ->searchable()
                     ->preload(),
+                Select::make('roadmap_item_id')
+                    ->label('Item do Roadmap')
+                    ->options(function ($livewire) {
+                        $projectId = $livewire->ownerRecord?->id;
+                        if (!$projectId) return [];
+                        return \App\Models\RoadmapItem::where('project_id', $projectId)
+                            ->pluck('title', 'id');
+                    })
+                    ->searchable()
+                    ->nullable(),
                 TextInput::make('title')
                     ->label('Título')
                     ->required()

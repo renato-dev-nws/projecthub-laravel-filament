@@ -22,6 +22,7 @@ class Lead extends Model
         'phone',
         'website',
         'referral_url',
+        'lead_source_id',
         'source',
         'status',
         'priority',
@@ -70,5 +71,10 @@ class Lead extends Model
     public function notes(): HasMany
     {
         return $this->hasMany(LeadNote::class);
+    }
+
+    public function leadSource(): BelongsTo
+    {
+        return $this->belongsTo(LeadSource::class);
     }
 }

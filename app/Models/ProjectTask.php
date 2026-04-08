@@ -28,6 +28,7 @@ class ProjectTask extends Model
     protected $fillable = [
         'project_id',
         'phase_id',
+        'roadmap_item_id',
         'assigned_to',
         'created_by',
         'parent_task_id',
@@ -59,6 +60,11 @@ class ProjectTask extends Model
     public function phase(): BelongsTo
     {
         return $this->belongsTo(ProjectPhase::class, 'phase_id');
+    }
+
+    public function roadmapItem(): BelongsTo
+    {
+        return $this->belongsTo(RoadmapItem::class);
     }
 
     public function assignee(): BelongsTo

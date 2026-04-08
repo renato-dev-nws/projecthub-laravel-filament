@@ -43,7 +43,9 @@ class ServiceResource extends Resource
 
     public static function getRelations(): array
     {
-        return [];
+        return [
+            RelationManagers\PricingTiersRelationManager::class,
+        ];
     }
 
     public static function getPages(): array

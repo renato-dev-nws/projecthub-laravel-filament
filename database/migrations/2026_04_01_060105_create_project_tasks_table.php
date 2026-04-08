@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('assigned_to')->nullable()->constrained('users');
             $table->foreignId('created_by')->nullable()->constrained('users');
             $table->foreignId('parent_task_id')->nullable()->constrained('project_tasks');
+            $table->unsignedBigInteger('roadmap_item_id')->nullable()->index();
             $table->string('title');
             $table->text('description')->nullable();
             $table->enum('status', [
