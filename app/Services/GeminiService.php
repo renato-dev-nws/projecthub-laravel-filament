@@ -14,28 +14,44 @@ class GeminiService
     public function __construct()
     {
         $this->apiKey = config('services.gemini.api_key');
-        $this->model  = config('services.gemini.model', 'gemini-1.5-flash');
+        $this->model  = config('services.gemini.model', 'gemini-2.0-flash');
     }
 
     public function generateJson(string $prompt): array
     {
-        $response = Http::timeout(60)
-            ->post("{$this->baseUrl}/models/{$this->model}:generateContent?key={$this->apiKey}", [
-                'contents' => [
-                    ['role' => 'user', 'parts' => [['text' => $prompt]]],
-                ],
-                'generationConfig' => [
-                    'temperature'      => 0.3,
-                    'responseMimeType' => 'application/json',
-                ],
-            ]);
+        $candidateModels = array_values(array_unique(array_filter([
+            $this->model,
+            'gemini-2.0-flash',
+            'gemini-2.0-flash-lite',
+        ])));
 
-        if ($response->failed()) {
-            throw new RuntimeException('Erro ao chamar API Gemini: ' . $response->body());
+        $lastErrorBody = null;
+
+        foreach ($candidateModels as $model) {
+            $response = Http::timeout(60)
+                ->post("{$this->baseUrl}/models/{$model}:generateContent?key={$this->apiKey}", [
+                    'contents' => [
+                        ['role' => 'user', 'parts' => [['text' => $prompt]]],
+                    ],
+                    'generationConfig' => [
+                        'temperature'      => 0.3,
+                        'responseMimeType' => 'application/json',
+                    ],
+                ]);
+
+            if ($response->successful()) {
+                $text = $response->json('candidates.0.content.parts.0.text', '{}');
+
+                return json_decode($text, true) ?? [];
+            }
+
+            $lastErrorBody = $response->body();
+
+            if ($response->status() !== 404) {
+                throw new RuntimeException('Erro ao chamar API Gemini: ' . $lastErrorBody);
+            }
         }
 
-        $text = $response->json('candidates.0.content.parts.0.text', '{}');
-
-        return json_decode($text, true) ?? [];
+        throw new RuntimeException('Erro ao chamar API Gemini: ' . ($lastErrorBody ?? 'modelo indisponível.'));
     }
 }

@@ -1,5 +1,5 @@
 <x-filament-panels::page>
-    <div class="mx-auto max-w-4xl px-4 py-6 space-y-6">
+    <div class="mx-auto w-full px-4 py-6 space-y-6 lg:min-w-[70vw] lg:max-w-[85vw]">
 
         {{-- Step 1: Input --}}
         <x-filament::section>

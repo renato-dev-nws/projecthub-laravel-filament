@@ -31,10 +31,13 @@ class TeamPanelProvider extends PanelProvider
                 'primary' => Color::Cyan,
                 'gray'    => Color::Slate,
             ])
-            ->brandLogo(asset('images/logo.svg'))
+            ->brandLogo(asset('img/logo.svg'))
             ->brandLogoHeight('2.5rem')
             ->brandName('')
+            ->sidebarCollapsibleOnDesktop()
             ->favicon(asset('img/icon.svg'))
+            ->darkModeBrandLogo(asset('img/logo-bg-dark.svg'))
+            ->viteTheme('resources/css/filament/admin/theme.css')
             ->navigationGroups([
                 NavigationGroup::make('Projetos'),
                 NavigationGroup::make('CRM'),
