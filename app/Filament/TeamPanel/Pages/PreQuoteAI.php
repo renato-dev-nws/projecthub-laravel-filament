@@ -13,6 +13,7 @@ use BackedEnum;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Pages\Page;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use UnitEnum;
 
 class PreQuoteAI extends Page
@@ -88,17 +89,17 @@ PROMPT;
     {
         $calculator = app(PricingCalculatorService::class);
 
-        foreach ($result['phases'] ?? [] as &$phase) {
+        foreach ($result['phases'] ?? [] as $pi => $phase) {
             $phaseTotal = 0;
 
-            foreach ($phase['items'] ?? [] as &$item) {
-                $price = $calculator->getPriceForHours($item['service_id'], $item['hours']);
-                $item['unit_price'] = $price;
-                $item['subtotal'] = round($price * $item['hours'], 2);
-                $phaseTotal += $item['subtotal'];
+            foreach ($phase['items'] ?? [] as $ii => $item) {
+                $price = $calculator->getPriceForHours($item['service_id'] ?? 0, $item['hours'] ?? 0);
+                $result['phases'][$pi]['items'][$ii]['unit_price'] = $price;
+                $result['phases'][$pi]['items'][$ii]['subtotal'] = round($price * ($item['hours'] ?? 0), 2);
+                $phaseTotal += $result['phases'][$pi]['items'][$ii]['subtotal'];
             }
 
-            $phase['subtotal'] = $phaseTotal;
+            $result['phases'][$pi]['subtotal'] = $phaseTotal;
         }
 
         $result['total'] = collect($result['phases'] ?? [])->sum('subtotal');
@@ -112,9 +113,15 @@ PROMPT;
             return;
         }
 
+        $leadName = Lead::find($this->lead_id)?->name;
+        $titleBase = $leadName ? "Orcamento IA - {$leadName}" : 'Orcamento IA';
+        $title = Str::limit($titleBase, 255, '');
+        $description = $this->aiResult['project_summary'] ?? null;
+        
         $quote = Quote::create([
             'lead_id'    => $this->lead_id,
-            'title'      => $this->aiResult['project_summary'],
+            'title'      => $title,
+            'description'=> $description,
             'number'     => 'AI-' . now()->format('YmdHis'),
             'status'     => 'draft',
             'created_by' => Auth::id(),

@@ -19,6 +19,7 @@ class LeadSeeder extends Seeder
         // Lead 1 - Em negociação
         $lead1 = Lead::create([
             'name' => 'Diego Carvalho',
+            'title' => 'Sistema de Gestao Financeira',
             'company' => 'Finance Tech Ltda',
             'email' => 'diego@financetech.com',
             'phone' => '(11) 97777-1111',
@@ -46,6 +47,7 @@ class LeadSeeder extends Seeder
         // Lead 2 - Proposta enviada
         $lead2 = Lead::create([
             'name' => 'Camila Rocha',
+            'title' => 'Plataforma EAD com CMS',
             'company' => 'EduTech Brasil S/A',
             'email' => 'camila@edutechbrasil.com',
             'phone' => '(21) 96666-2222',
@@ -67,6 +69,7 @@ class LeadSeeder extends Seeder
         // Lead 3 - Qualificado
         Lead::create([
             'name' => 'Henrique Nunes',
+            'title' => 'Sistema de Rastreamento Logistico',
             'company' => 'Logística Express Ltda',
             'email' => 'henrique@logisticaexpress.com',
             'phone' => '(11) 95555-3333',
@@ -82,6 +85,7 @@ class LeadSeeder extends Seeder
         // Lead 4 - Novo
         Lead::create([
             'name' => 'Fernanda Souza',
+            'title' => 'Agendamento e Prontuario para Clinica',
             'company' => 'Clínica Bem Estar',
             'email' => 'fernanda@clinicabemestar.com',
             'phone' => '(11) 94444-4444',
@@ -97,6 +101,7 @@ class LeadSeeder extends Seeder
         // Lead 5 - Convertido (cliente StartUp XYZ)
         Lead::create([
             'name' => 'Bruno Lima',
+            'title' => 'App Mobile de Gestao Interna',
             'company' => 'StartUp XYZ Ltda',
             'email' => 'bruno@startupxyz.com',
             'phone' => '(11) 93333-5555',
@@ -114,6 +119,7 @@ class LeadSeeder extends Seeder
         // Lead 6 - Perdido
         Lead::create([
             'name' => 'Marcelo Castro',
+            'title' => 'E-commerce B2B para Varejo',
             'company' => 'RetailMax Ltda',
             'email' => 'marcelo@retailmax.com',
             'phone' => '(11) 92222-6666',

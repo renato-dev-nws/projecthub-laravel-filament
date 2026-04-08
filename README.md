@@ -268,7 +268,7 @@ No `.env`, configurar especialmente:
 
 ```env
 GEMINI_API_KEY=
-GEMINI_MODEL=gemini-2.0-flash
+GEMINI_MODEL=gemini-2.5-flash
 ```
 
 ---

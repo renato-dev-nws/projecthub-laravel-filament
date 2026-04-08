@@ -28,6 +28,10 @@ class QuoteForm
                         ->label('Título')
                         ->required()
                         ->maxLength(255),
+                    Textarea::make('description')
+                        ->label('Descricao')
+                        ->rows(3)
+                        ->columnSpanFull(),
                     Select::make('client_id')
                         ->label('Cliente')
                         ->relationship('client', 'company_name')
@@ -60,12 +64,6 @@ class QuoteForm
                         ->createOptionUsing(function (array $data): int {
                             return Lead::create(array_merge($data, ['status' => 'new']))->id;
                         }),
-                    Select::make('created_by')
-                        ->label('Criado por')
-                        ->relationship('creator', 'name')
-                        ->searchable()
-                        ->preload()
-                        ->required(),
                     Select::make('status')
                         ->label('Status')
                         ->options([

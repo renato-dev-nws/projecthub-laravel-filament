@@ -25,6 +25,10 @@ class QuotesTable
                     ->label('Cliente')
                     ->searchable()
                     ->sortable(),
+                TextColumn::make('lead.name')
+                    ->label('Lead')
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('status')
                     ->label('Status')
                     ->badge()
@@ -52,10 +56,6 @@ class QuotesTable
                     ->label('Válido até')
                     ->date('d/m/Y')
                     ->sortable(),
-                TextColumn::make('creator.name')
-                    ->label('Criado por')
-                    ->sortable()
-                    ->toggleable(),
                 TextColumn::make('created_at')
                     ->label('Criado em')
                     ->date('d/m/Y')

@@ -21,6 +21,9 @@ class LeadForm
                         ->label('Nome')
                         ->required()
                         ->maxLength(255),
+                    TextInput::make('title')
+                        ->label('Titulo')
+                        ->maxLength(255),
                     TextInput::make('email')
                         ->label('E-mail')
                         ->email()

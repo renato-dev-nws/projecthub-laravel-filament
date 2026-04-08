@@ -14,15 +14,15 @@ class GeminiService
     public function __construct()
     {
         $this->apiKey = config('services.gemini.api_key');
-        $this->model  = config('services.gemini.model', 'gemini-2.0-flash');
+        $this->model  = config('services.gemini.model', 'gemini-2.5-flash');
     }
 
     public function generateJson(string $prompt): array
     {
         $candidateModels = array_values(array_unique(array_filter([
             $this->model,
-            'gemini-2.0-flash',
-            'gemini-2.0-flash-lite',
+            'gemini-2.5-flash',
+            'gemini-2.5-flash-lite',
         ])));
 
         $lastErrorBody = null;

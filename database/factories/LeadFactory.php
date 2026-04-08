@@ -14,6 +14,7 @@ class LeadFactory extends Factory
     {
         return [
             'name'     => fake()->name(),
+            'title'    => fake()->sentence(4),
             'email'    => fake()->safeEmail(),
             'phone'    => fake()->numerify('(##) #####-####'),
             'company'  => fake()->company(),

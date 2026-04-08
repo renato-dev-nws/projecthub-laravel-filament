@@ -23,6 +23,10 @@ class LeadsTable
                 TextColumn::make('company')
                     ->label('Empresa')
                     ->searchable(),
+                TextColumn::make('title')
+                    ->label('Titulo')
+                    ->searchable()
+                    ->toggleable(),
                 TextColumn::make('email')
                     ->label('Email')
                     ->searchable()

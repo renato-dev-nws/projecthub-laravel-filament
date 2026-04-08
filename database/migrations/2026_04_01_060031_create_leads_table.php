@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('leads', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('title')->nullable();
             $table->string('email')->nullable();
             $table->string('phone', 20)->nullable();
             $table->string('company')->nullable();
