@@ -2,8 +2,6 @@
 
 namespace App\Filament\TeamPanel\Resources\Settings;
 
-use App\Filament\TeamPanel\Resources\Settings\ServiceCategory\Pages\CreateServiceCategory;
-use App\Filament\TeamPanel\Resources\Settings\ServiceCategory\Pages\EditServiceCategory;
 use App\Filament\TeamPanel\Resources\Settings\ServiceCategory\Pages\ListServiceCategories;
 use App\Models\ServiceCategory;
 use BackedEnum;
@@ -15,7 +13,6 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Actions\BulkActionGroup;
-use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -81,9 +78,6 @@ class ServiceCategoryResource extends Resource
                     ->label('Ordem')
                     ->sortable(),
             ])
-            ->headerActions([
-                CreateAction::make(),
-            ])
             ->recordActions([
                 EditAction::make(),
                 DeleteAction::make(),
@@ -98,9 +92,7 @@ class ServiceCategoryResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => ListServiceCategories::route('/'),
-            'create' => CreateServiceCategory::route('/create'),
-            'edit'   => EditServiceCategory::route('/{record}/edit'),
+            'index' => ListServiceCategories::route('/'),
         ];
     }
 }

@@ -2,12 +2,9 @@
 
 namespace App\Filament\TeamPanel\Resources\Financial;
 
-use App\Filament\TeamPanel\Resources\Financial\Bank\Pages\CreateBank;
-use App\Filament\TeamPanel\Resources\Financial\Bank\Pages\EditBank;
 use App\Filament\TeamPanel\Resources\Financial\Bank\Pages\ListBanks;
 use App\Models\Bank;
 use BackedEnum;
-use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\TextInput;
@@ -30,7 +27,7 @@ class BankResource extends Resource
 
     protected static ?string $navigationLabel = 'Bancos';
 
-    protected static ?int $navigationSort = 10;
+    protected static ?int $navigationSort = 3;
 
     protected static ?string $modelLabel = 'Banco';
 
@@ -100,18 +97,13 @@ class BankResource extends Resource
             ->recordActions([
                 EditAction::make(),
                 DeleteAction::make(),
-            ])
-            ->headerActions([
-                CreateAction::make(),
             ]);
     }
 
     public static function getPages(): array
     {
         return [
-            'index'  => ListBanks::route('/'),
-            'create' => CreateBank::route('/create'),
-            'edit'   => EditBank::route('/{record}/edit'),
+            'index' => ListBanks::route('/'),
         ];
     }
 }

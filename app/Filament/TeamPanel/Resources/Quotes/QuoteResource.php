@@ -21,11 +21,11 @@ class QuoteResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentText;
 
-    protected static string | UnitEnum | null $navigationGroup = 'Financeiro';
+    protected static string | UnitEnum | null $navigationGroup = 'Projetos';
 
     protected static ?string $navigationLabel = 'Orçamentos';
 
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 3;
 
     protected static ?string $modelLabel = 'Orçamento';
 

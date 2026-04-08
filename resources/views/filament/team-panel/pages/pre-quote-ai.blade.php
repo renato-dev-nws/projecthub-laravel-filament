@@ -1,13 +1,13 @@
 <x-filament-panels::page>
-    <div class="space-y-6">
+    <div class="mx-auto max-w-4xl px-4 py-6 space-y-6">
 
         {{-- Step 1: Input --}}
         <x-filament::section>
             <x-slot name="heading">Descreva o Projeto</x-slot>
             <div class="space-y-4">
                 <div>
-                    <label class="block text-sm font-medium mb-1">Lead (opcional)</label>
-                    <select wire:model="lead_id" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Lead (opcional)</label>
+                    <select wire:model="lead_id" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-primary-500 focus:ring-2 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100">
                         <option value="">— Sem lead —</option>
                         @foreach(\App\Models\Lead::whereNotIn('status', ['converted','lost'])->orderBy('name')->get() as $lead)
                             <option value="{{ $lead->id }}">{{ $lead->name }} @if($lead->company)({{ $lead->company }})@endif</option>
@@ -15,10 +15,10 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium mb-1">Descrição do Projeto <span class="text-red-500">*</span></label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Descrição do Projeto <span class="text-red-500">*</span></label>
                     <textarea wire:model="project_description" rows="6"
                         placeholder="Descreva o projeto em detalhes: funcionalidades, tecnologias, objetivos, público-alvo..."
-                        class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500"></textarea>
+                        class="w-full min-h-[140px] rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-primary-500 focus:ring-2 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-400"></textarea>
                     @error('project_description')
                         <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                     @enderror
@@ -35,49 +35,51 @@
         <x-filament::section>
             <x-slot name="heading">Resultado da Análise</x-slot>
             @if($aiResult['project_summary'] ?? null)
-            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4 italic">{{ $aiResult['project_summary'] }}</p>
+            <div class="rounded-lg bg-gray-50 border border-gray-200 p-4 text-sm text-gray-800 mb-4 italic">
+                {{ $aiResult['project_summary'] }}
+            </div>
             @endif
 
             @foreach($aiResult['phases'] ?? [] as $phase)
-            <div class="mb-6 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
-                <div class="bg-gray-50 dark:bg-gray-800 px-4 py-3 flex justify-between items-center">
-                    <span class="font-semibold text-sm">{{ $phase['name'] }}</span>
+            <div class="mb-6 rounded-xl border border-gray-200 overflow-hidden">
+                <div class="bg-gray-50 px-4 py-3 flex justify-between items-center border-b border-gray-200">
+                    <span class="font-semibold text-sm text-gray-900">{{ $phase['name'] }}</span>
                     @if($phase['estimated_days'] ?? null)
                     <span class="text-xs text-gray-500">{{ $phase['estimated_days'] }} dias</span>
                     @endif
                 </div>
                 @if($phase['description'] ?? null)
-                <p class="px-4 py-2 text-xs text-gray-500 italic">{{ $phase['description'] }}</p>
+                <p class="px-4 py-2 text-xs text-gray-500 italic border-b border-gray-100">{{ $phase['description'] }}</p>
                 @endif
                 <table class="w-full text-sm">
-                    <thead class="bg-primary-50 dark:bg-primary-900/20 text-xs">
+                    <thead class="bg-gray-50 text-xs border-b border-gray-200">
                         <tr>
-                            <th class="text-left px-4 py-2">Serviço / Descrição</th>
-                            <th class="text-right px-4 py-2">Horas</th>
-                            <th class="text-right px-4 py-2">R$/h</th>
-                            <th class="text-right px-4 py-2">Subtotal</th>
+                            <th class="text-left px-4 py-2 text-gray-700 font-medium">Serviço / Descrição</th>
+                            <th class="text-right px-4 py-2 text-gray-700 font-medium">Horas</th>
+                            <th class="text-right px-4 py-2 text-gray-700 font-medium">R$/h</th>
+                            <th class="text-right px-4 py-2 text-gray-700 font-medium">Subtotal</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($phase['items'] ?? [] as $item)
-                        <tr class="border-t border-gray-100 dark:border-gray-700">
-                            <td class="px-4 py-2">{{ $item['description'] }}</td>
-                            <td class="text-right px-4 py-2">{{ $item['hours'] }}h</td>
-                            <td class="text-right px-4 py-2">R$ {{ number_format($item['unit_price'], 2, ',', '.') }}</td>
-                            <td class="text-right px-4 py-2">R$ {{ number_format($item['subtotal'], 2, ',', '.') }}</td>
+                        <tr class="border-b border-gray-200">
+                            <td class="px-4 py-2 text-gray-800">{{ $item['description'] }}</td>
+                            <td class="text-right px-4 py-2 text-gray-700">{{ $item['hours'] }}h</td>
+                            <td class="text-right px-4 py-2 text-gray-700">R$ {{ number_format($item['unit_price'], 2, ',', '.') }}</td>
+                            <td class="text-right px-4 py-2 text-gray-700">R$ {{ number_format($item['subtotal'], 2, ',', '.') }}</td>
                         </tr>
                         @endforeach
-                        <tr class="bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-600 font-semibold">
-                            <td colspan="3" class="text-right px-4 py-2 text-xs uppercase tracking-wide">Subtotal da fase:</td>
-                            <td class="text-right px-4 py-2">R$ {{ number_format($phase['subtotal'], 2, ',', '.') }}</td>
+                        <tr class="bg-gray-50 border-t border-gray-200 font-semibold">
+                            <td colspan="3" class="text-right px-4 py-2 text-xs uppercase tracking-wide text-gray-600">Subtotal da fase:</td>
+                            <td class="text-right px-4 py-2 text-gray-800">R$ {{ number_format($phase['subtotal'], 2, ',', '.') }}</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             @endforeach
 
-            <div class="flex justify-between items-center mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-                <span class="font-bold text-lg">Total estimado:</span>
+            <div class="flex justify-between items-center mt-4 pt-4 border-t border-gray-200">
+                <span class="font-bold text-lg text-gray-900">Total estimado:</span>
                 <span class="font-bold text-xl text-primary-600">R$ {{ number_format($aiResult['total'] ?? 0, 2, ',', '.') }}</span>
             </div>
 
@@ -94,12 +96,12 @@
         {{-- Step 3: Generated --}}
         @if($generatedQuoteId)
         <x-filament::section>
-            <div class="flex items-center gap-3 text-success-600">
+            <div class="rounded-lg bg-green-50 border border-green-200 p-4 flex items-center gap-3">
                 <span class="text-2xl">✅</span>
                 <div>
-                    <p class="font-semibold">Orçamento gerado com sucesso!</p>
+                    <p class="font-semibold text-green-800">Orçamento gerado com sucesso!</p>
                     <a href="{{ route('filament.admin.resources.quotes.edit', $generatedQuoteId) }}"
-                       class="text-sm text-primary-600 underline">
+                       class="text-sm font-medium text-green-600 hover:text-green-700 underline">
                         Abrir orçamento →
                     </a>
                 </div>

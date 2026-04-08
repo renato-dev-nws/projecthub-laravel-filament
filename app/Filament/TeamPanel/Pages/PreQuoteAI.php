@@ -25,8 +25,8 @@ class PreQuoteAI extends Page
     }
 
     protected static ?string $navigationLabel = 'Pré-Orçamento IA';
-    protected static UnitEnum|string|null $navigationGroup = 'Financeiro';
-    protected static ?int $navigationSort = 5;
+    protected static UnitEnum|string|null $navigationGroup = 'Projetos';
+    protected static ?int $navigationSort = 4;
     protected static BackedEnum|string|null $navigationIcon = \Filament\Support\Icons\Heroicon::OutlinedSparkles;
 
     public ?int $lead_id = null;

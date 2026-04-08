@@ -12,7 +12,8 @@ class FinancialTransaction extends Model
 
     protected $fillable = [
         'type', 'description', 'amount', 'due_date', 'paid_date', 'status',
-        'bank_id', 'financial_category_id', 'supplier_id', 'project_id',
+        'payment_method', 'payment_link',
+        'bank_id', 'financial_category_id', 'supplier_id', 'project_id', 'client_id',
         'reference_number', 'notes', 'created_by',
     ];
 
@@ -43,6 +44,11 @@ class FinancialTransaction extends Model
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
+    }
+
+    public function client(): BelongsTo
+    {
+        return $this->belongsTo(Client::class);
     }
 
     public function creator(): BelongsTo

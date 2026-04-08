@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\TeamPanel\Resources\Leads\Pages;
+namespace App\Filament\TeamPanel\Clusters\Leads\Resources\Pages;
 
-use App\Filament\TeamPanel\Resources\Leads\LeadResource;
+use App\Filament\TeamPanel\Clusters\Leads\Resources\LeadResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 

@@ -82,7 +82,7 @@ class LatestProjectsWidget extends BaseWidget
                     ->date('d/m/Y')
                     ->color(fn ($record) => $record->end_date?->isPast() ? 'danger' : null),
             ])
-            ->actions([
+            ->recordActions([
                 Action::make('view')
                     ->label('Ver')
                     ->icon('heroicon-m-eye')

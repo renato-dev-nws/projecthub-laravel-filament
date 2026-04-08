@@ -10,9 +10,11 @@ use BackedEnum;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
@@ -29,7 +31,7 @@ class SupplierResource extends Resource
 
     protected static ?string $navigationLabel = 'Fornecedores';
 
-    protected static ?int $navigationSort = 12;
+    protected static ?int $navigationSort = 2;
 
     protected static ?string $modelLabel = 'Fornecedor';
 
@@ -38,30 +40,51 @@ class SupplierResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->columns(2)->components([
-            TextInput::make('name')
-                ->label('Nome')
-                ->required()
-                ->maxLength(255),
+            Section::make('Dados do Fornecedor')
+                ->columnSpanFull()
+                ->columns(2)
+                ->schema([
+                    TextInput::make('name')
+                        ->label('Nome')
+                        ->required()
+                        ->maxLength(255),
 
-            TextInput::make('cnpj')
-                ->label('CNPJ')
-                ->mask('99.999.999/9999-99')
-                ->maxLength(18),
+                    TextInput::make('cnpj')
+                        ->label('CNPJ')
+                        ->mask('99.999.999/9999-99')
+                        ->maxLength(20),
 
-            TextInput::make('email')
-                ->label('E-mail')
-                ->email()
-                ->maxLength(255),
+                    TextInput::make('email')
+                        ->label('E-mail')
+                        ->email()
+                        ->maxLength(255),
 
-            TextInput::make('phone')
-                ->label('Telefone')
-                ->tel()
-                ->maxLength(30),
+                    TextInput::make('phone')
+                        ->label('Telefone')
+                        ->tel()
+                        ->maxLength(20),
 
-            Textarea::make('notes')
-                ->label('Observações')
-                ->rows(3)
-                ->columnSpanFull(),
+                    TextInput::make('website')
+                        ->label('Site')
+                        ->url()
+                        ->maxLength(255)
+                        ->nullable(),
+
+                    Select::make('supplier_category_id')
+                        ->label('Categoria')
+                        ->relationship('supplierCategory', 'name')
+                        ->searchable()
+                        ->nullable(),
+                ]),
+
+            Section::make('Observações')
+                ->columnSpanFull()
+                ->schema([
+                    Textarea::make('notes')
+                        ->label('Observações')
+                        ->rows(3)
+                        ->columnSpanFull(),
+                ]),
         ]);
     }
 
@@ -94,9 +117,6 @@ class SupplierResource extends Resource
             ->recordActions([
                 EditAction::make(),
                 DeleteAction::make(),
-            ])
-            ->headerActions([
-                CreateAction::make(),
             ]);
     }
 

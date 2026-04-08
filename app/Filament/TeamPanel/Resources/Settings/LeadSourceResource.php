@@ -2,8 +2,6 @@
 
 namespace App\Filament\TeamPanel\Resources\Settings;
 
-use App\Filament\TeamPanel\Resources\Settings\LeadSource\Pages\CreateLeadSource;
-use App\Filament\TeamPanel\Resources\Settings\LeadSource\Pages\EditLeadSource;
 use App\Filament\TeamPanel\Resources\Settings\LeadSource\Pages\ListLeadSources;
 use App\Models\LeadSource;
 use BackedEnum;
@@ -13,7 +11,6 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Actions\BulkActionGroup;
-use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -78,9 +75,6 @@ class LeadSourceResource extends Resource
                     ->label('Ordem')
                     ->sortable(),
             ])
-            ->headerActions([
-                CreateAction::make(),
-            ])
             ->recordActions([
                 EditAction::make(),
                 DeleteAction::make(),
@@ -95,9 +89,7 @@ class LeadSourceResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => ListLeadSources::route('/'),
-            'create' => CreateLeadSource::route('/create'),
-            'edit'   => EditLeadSource::route('/{record}/edit'),
+            'index' => ListLeadSources::route('/'),
         ];
     }
 }

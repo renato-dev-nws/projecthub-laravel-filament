@@ -15,6 +15,8 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('phone', 20)->nullable();
             $table->text('notes')->nullable();
+            $table->string('website')->nullable();
+            $table->foreignId('supplier_category_id')->nullable()->constrained('supplier_categories')->nullOnDelete();
             $table->timestamps();
             $table->softDeletes();
         });

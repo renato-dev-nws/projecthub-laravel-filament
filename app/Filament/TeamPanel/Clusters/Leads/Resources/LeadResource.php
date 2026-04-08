@@ -1,20 +1,20 @@
 <?php
 
-namespace App\Filament\TeamPanel\Resources\Leads;
+namespace App\Filament\TeamPanel\Clusters\Leads\Resources;
 
-use App\Filament\TeamPanel\Resources\Leads\Pages\CreateLead;
-use App\Filament\TeamPanel\Resources\Leads\Pages\EditLead;
-use App\Filament\TeamPanel\Resources\Leads\Pages\LeadKanban;
-use App\Filament\TeamPanel\Resources\Leads\Pages\ListLeads;
-use App\Filament\TeamPanel\Resources\Leads\Schemas\LeadForm;
-use App\Filament\TeamPanel\Resources\Leads\Tables\LeadsTable;
+use App\Filament\TeamPanel\Clusters\Leads\LeadsCluster;
+use App\Filament\TeamPanel\Clusters\Leads\Resources\Pages\CreateLead;
+use App\Filament\TeamPanel\Clusters\Leads\Resources\Pages\EditLead;
+use App\Filament\TeamPanel\Clusters\Leads\Resources\Pages\LeadKanban;
+use App\Filament\TeamPanel\Clusters\Leads\Resources\Pages\ListLeads;
+use App\Filament\TeamPanel\Clusters\Leads\Resources\Schemas\LeadForm;
+use App\Filament\TeamPanel\Clusters\Leads\Resources\Tables\LeadsTable;
 use App\Models\Lead;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use UnitEnum;
 
 class LeadResource extends Resource
 {
@@ -22,11 +22,9 @@ class LeadResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedFunnel;
 
-    protected static string | UnitEnum | null $navigationGroup = 'CRM';
-
     protected static ?string $navigationLabel = 'Leads';
 
-    protected static ?int $navigationSort = 1;
+    protected static ?string $cluster = LeadsCluster::class;
 
     protected static ?string $modelLabel = 'Lead';
 

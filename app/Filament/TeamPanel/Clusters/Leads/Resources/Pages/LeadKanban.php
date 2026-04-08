@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\TeamPanel\Resources\Leads\Pages;
+namespace App\Filament\TeamPanel\Clusters\Leads\Resources\Pages;
 
-use App\Filament\TeamPanel\Resources\Leads\LeadResource;
+use App\Filament\TeamPanel\Clusters\Leads\Resources\LeadResource;
 use App\Models\Lead;
 use Filament\Resources\Pages\Page;
 use Livewire\Attributes\On;

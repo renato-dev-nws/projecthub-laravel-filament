@@ -17,6 +17,8 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
@@ -34,7 +36,7 @@ class FinancialTransactionResource extends Resource
 
     protected static ?string $navigationLabel = 'Transações';
 
-    protected static ?int $navigationSort = 9;
+    protected static ?int $navigationSort = 1;
 
     protected static ?string $modelLabel = 'Transação';
 
@@ -53,7 +55,8 @@ class FinancialTransactionResource extends Resource
                             'income'  => 'Receita',
                             'expense' => 'Despesa',
                         ])
-                        ->required(),
+                        ->required()
+                        ->live(),
 
                     TextInput::make('description')
                         ->label('Descrição')
@@ -84,16 +87,17 @@ class FinancialTransactionResource extends Resource
                         ])
                         ->default('pending'),
 
-                    Select::make('bank_id')
-                        ->label('Banco')
-                        ->relationship('bank', 'name')
-                        ->searchable()
-                        ->nullable(),
-
-                    Select::make('financial_category_id')
-                        ->label('Categoria')
-                        ->relationship('category', 'name')
-                        ->searchable()
+                    Select::make('payment_method')
+                        ->label('Forma de Pagamento')
+                        ->options([
+                            'credit_card'  => 'Cartão de Crédito',
+                            'debit_card'   => 'Cartão de Débito',
+                            'pix'          => 'Pix',
+                            'boleto'       => 'Boleto Bancário',
+                            'payment_link' => 'Link de Cobrança',
+                            'deposit'      => 'Depósito',
+                            'cash'         => 'Dinheiro',
+                        ])
                         ->nullable(),
                 ]),
 
@@ -101,22 +105,58 @@ class FinancialTransactionResource extends Resource
                 ->columnSpanFull()
                 ->columns(2)
                 ->schema([
+                    Select::make('project_id')
+                        ->label('Projeto')
+                        ->relationship('project', 'name')
+                        ->searchable()
+                        ->nullable()
+                        ->live()
+                        ->hidden(fn (Get $get) => $get('type') !== 'income')
+                        ->afterStateUpdated(function ($state, Set $set) {
+                            if ($state) {
+                                $project = \App\Models\Project::find($state);
+                                $set('client_id', $project?->client_id);
+                            } else {
+                                $set('client_id', null);
+                            }
+                        }),
+
+                    Select::make('client_id')
+                        ->label('Cliente')
+                        ->relationship('client', 'company_name')
+                        ->searchable()
+                        ->nullable()
+                        ->hidden(fn (Get $get) => $get('type') !== 'income')
+                        ->disabled(fn (Get $get) => (bool) $get('project_id'))
+                        ->dehydrated(),
+
                     Select::make('supplier_id')
                         ->label('Fornecedor')
                         ->relationship('supplier', 'name')
                         ->searchable()
                         ->nullable(),
 
-                    Select::make('project_id')
-                        ->label('Projeto')
-                        ->relationship('project', 'name')
+                    Select::make('bank_id')
+                        ->label('Banco')
+                        ->relationship('bank', 'name')
+                        ->searchable()
+                        ->required(),
+
+                    Select::make('financial_category_id')
+                        ->label('Categoria')
+                        ->relationship('category', 'name')
                         ->searchable()
                         ->nullable(),
 
                     TextInput::make('reference_number')
                         ->label('Número de Referência')
-                        ->nullable()
                         ->maxLength(100),
+
+                    TextInput::make('payment_link')
+                        ->label('Link de Pagamento')
+                        ->url()
+                        ->maxLength(500)
+                        ->nullable(),
 
                     Textarea::make('notes')
                         ->label('Observações')
@@ -188,6 +228,20 @@ class FinancialTransactionResource extends Resource
                     ->label('Banco')
                     ->sortable()
                     ->toggleable(),
+
+                TextColumn::make('payment_method')
+                    ->label('Pagamento')
+                    ->formatStateUsing(fn ($state) => match($state) {
+                        'credit_card'  => 'Cartão Crédito',
+                        'debit_card'   => 'Cartão Débito',
+                        'pix'          => 'Pix',
+                        'boleto'       => 'Boleto',
+                        'payment_link' => 'Link de Cobrança',
+                        'deposit'      => 'Depósito',
+                        'cash'         => 'Dinheiro',
+                        default        => $state ?? '-',
+                    })
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('type')
@@ -220,9 +274,6 @@ class FinancialTransactionResource extends Resource
                     ->action(fn ($record) => $record->update(['status' => 'paid', 'paid_date' => now()])),
                 EditAction::make(),
                 DeleteAction::make(),
-            ])
-            ->headerActions([
-                CreateAction::make(),
             ]);
     }
 

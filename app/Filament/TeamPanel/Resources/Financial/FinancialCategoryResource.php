@@ -2,12 +2,9 @@
 
 namespace App\Filament\TeamPanel\Resources\Financial;
 
-use App\Filament\TeamPanel\Resources\Financial\FinancialCategory\Pages\CreateFinancialCategory;
-use App\Filament\TeamPanel\Resources\Financial\FinancialCategory\Pages\EditFinancialCategory;
 use App\Filament\TeamPanel\Resources\Financial\FinancialCategory\Pages\ListFinancialCategories;
 use App\Models\FinancialCategory;
 use BackedEnum;
-use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\ColorPicker;
@@ -32,7 +29,7 @@ class FinancialCategoryResource extends Resource
 
     protected static ?string $navigationLabel = 'Categorias';
 
-    protected static ?int $navigationSort = 11;
+    protected static ?int $navigationSort = 4;
 
     protected static ?string $modelLabel = 'Categoria';
 
@@ -98,18 +95,13 @@ class FinancialCategoryResource extends Resource
             ->recordActions([
                 EditAction::make(),
                 DeleteAction::make(),
-            ])
-            ->headerActions([
-                CreateAction::make(),
             ]);
     }
 
     public static function getPages(): array
     {
         return [
-            'index'  => ListFinancialCategories::route('/'),
-            'create' => CreateFinancialCategory::route('/create'),
-            'edit'   => EditFinancialCategory::route('/{record}/edit'),
+            'index' => ListFinancialCategories::route('/'),
         ];
     }
 }

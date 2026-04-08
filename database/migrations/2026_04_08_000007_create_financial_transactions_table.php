@@ -16,10 +16,13 @@ return new class extends Migration
             $table->date('due_date');
             $table->date('paid_date')->nullable();
             $table->enum('status', ['pending', 'paid', 'overdue', 'cancelled'])->default('pending');
+            $table->string('payment_method')->nullable();
+            $table->string('payment_link')->nullable();
             $table->foreignId('bank_id')->nullable()->constrained('banks')->nullOnDelete();
             $table->foreignId('financial_category_id')->nullable()->constrained('financial_categories')->nullOnDelete();
             $table->foreignId('supplier_id')->nullable()->constrained('suppliers')->nullOnDelete();
             $table->foreignId('project_id')->nullable()->constrained('projects')->nullOnDelete();
+            $table->foreignId('client_id')->nullable()->constrained('clients')->nullOnDelete();
             $table->string('reference_number', 100)->nullable();
             $table->text('notes')->nullable();
             $table->foreignId('created_by')->constrained('users');

@@ -31,15 +31,20 @@ class TeamPanelProvider extends PanelProvider
                 'primary' => Color::Cyan,
                 'gray'    => Color::Slate,
             ])
-            ->brandLogo(fn () => view('filament.brand'))
-            ->brandLogoHeight('2rem')
+            ->brandLogo(asset('images/logo.svg'))
+            ->brandLogoHeight('2.5rem')
+            ->brandName('')
             ->favicon(asset('img/icon.svg'))
             ->navigationGroups([
-                NavigationGroup::make('CRM'),
                 NavigationGroup::make('Projetos'),
+                NavigationGroup::make('CRM'),
                 NavigationGroup::make('Financeiro'),
                 NavigationGroup::make('Configurações'),
             ])
+            ->discoverClusters(
+                in: app_path('Filament/TeamPanel/Clusters'),
+                for: 'App\\Filament\\TeamPanel\\Clusters'
+            )
             ->discoverResources(
                 in: app_path('Filament/TeamPanel/Resources'),
                 for: 'App\\Filament\\TeamPanel\\Resources'

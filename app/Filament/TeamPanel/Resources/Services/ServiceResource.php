@@ -21,11 +21,11 @@ class ServiceResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedWrenchScrewdriver;
 
-    protected static string | UnitEnum | null $navigationGroup = 'Configurações';
+    protected static string | UnitEnum | null $navigationGroup = 'Projetos';
 
     protected static ?string $navigationLabel = 'Serviços';
 
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 2;
 
     protected static ?string $modelLabel = 'Serviço';
 
