@@ -1,59 +1,321 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# ProjectHub
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistema completo para gestão de operações de uma software house/agência digital, com foco em CRM, orçamentos, execução de projetos e financeiro.
 
-## About Laravel
+## Visão Geral
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+O projeto possui dois painéis Filament:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **TeamPanel** (`/admin`): operação interna da equipe (vendas, projetos, financeiro e configurações)
+- **ClientPanel** (`/portal`): portal do cliente para acompanhamento dos próprios projetos
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Stack principal:
 
-## Learning Laravel
+- Laravel 12
+- Filament 4
+- Tailwind CSS 4 + Vite
+- PostgreSQL + Redis + Mailpit (via Sail)
+- Spatie Permission, Activitylog e Media Library
+- Integração com Google Gemini para recursos de IA
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Funcionalidades do Sistema (Inventário Completo)
 
-## Laravel Sponsors
+## 1. CRM de Leads
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+1. Cadastro e gestão de leads com dados comerciais.
+2. Pipeline por status (`new`, `contacted`, `qualified`, `proposal_sent`, `negotiation`, `converted`, `lost`).
+3. Priorização de leads (baixa, média, alta).
+4. Atribuição de lead para usuário responsável.
+5. Controle de origem de lead (Lead Sources).
+6. Registro de notas/histórico por lead.
+7. Cluster de Leads no menu CRM com:
+   - Lista de leads.
+   - Formulário de criação/edição.
+   - **Kanban de Leads** com drag-and-drop entre status.
 
-### Premium Partners
+## 2. Pré-Orçamento com IA
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+1. Página dedicada de **Pré-Orçamento IA**.
+2. Entrada de descrição do projeto (texto livre) e lead opcional.
+3. Consulta à API Gemini para sugerir escopo em JSON.
+4. Enriquecimento automático com precificação real dos serviços cadastrados.
+5. Geração de orçamento estruturado com fases + itens.
+6. Criação automática de orçamento em estado draft após confirmação.
 
-## Contributing
+## 3. Orçamentos (Quotes)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+1. CRUD completo de orçamentos.
+2. Organização por fases (`QuotePhase`) e itens (`QuoteItem`).
+3. Cálculo e recálculo automático de totais.
+4. Campos de acompanhamento comercial, incluindo visualização/aprovação.
+5. Geração de PDF de orçamento via rota autenticada.
 
-## Code of Conduct
+## 4. Projetos
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+1. CRUD completo de projetos.
+2. Relações gerenciadas diretamente no projeto:
+   - Fases.
+   - Tarefas.
+   - Roadmap.
+   - Documentos.
+   - Time logs.
+   - Comentários.
+3. Configurações de visibilidade no portal do cliente:
+   - `client_portal_enabled`
+   - `client_can_comment`
+4. Ação de **geração de roadmap com IA** na edição do projeto.
 
-## Security Vulnerabilities
+## 5. Tarefas e Execução
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+1. Tarefas com status, prioridade e ordenação.
+2. Atribuição de responsável.
+3. Associação opcional a item do roadmap.
+4. Observer para recálculo de progresso do projeto quando tarefas mudam.
 
-## License
+## 6. Roadmap
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+1. Gestão de roadmap por projeto.
+2. Relação entre roadmap e tarefas.
+3. Geração assistida por IA para sugerir itens e tarefas.
+
+## 7. Financeiro
+
+1. **Transações financeiras** (receita/despesa).
+2. Vínculos de transação com projeto, cliente, fornecedor, banco e categoria.
+3. Regras de formulário para receitas:
+   - Seleção de projeto.
+   - Preenchimento automático do cliente a partir do projeto.
+4. Campo de forma de pagamento (`payment_method`).
+5. Campo de link de pagamento (`payment_link`).
+6. Controle de status da transação (`pending`, `paid`, `overdue`, `cancelled`).
+
+## 8. Fornecedores e Bancos
+
+1. Cadastro de fornecedores com categoria.
+2. Cadastro de bancos.
+3. Categorias financeiras e categorias de fornecedores.
+4. Recursos simples com criação/edição por modal para entidades pequenas.
+
+## 9. Clientes e Portal
+
+1. Cadastro de clientes e contatos.
+2. Usuários de portal (`ClientPortalUser`) com guard próprio.
+3. No portal do cliente:
+   - Dashboard com widgets de projetos.
+   - Listagem de projetos do próprio cliente.
+   - Sem criação/edição/exclusão no portal.
+
+## 10. Serviços
+
+1. Catálogo de serviços.
+2. Categorias de serviço.
+3. Faixas de preço por serviço (`ServicePricingTier`) usadas na precificação.
+
+## 11. Usuários, Perfis e Permissões
+
+1. Gestão de usuários internos.
+2. Controle por roles/permissões (Spatie Permission).
+3. Policies para entidades críticas (Projetos, Leads, Clientes, Orçamentos).
+4. Guardas separados:
+   - `web` (equipe interna).
+   - `client_portal` (cliente externo).
+
+## 12. Auditoria e Mídia
+
+1. Activity Log para rastreabilidade de mudanças (modelos com log habilitado).
+2. Media Library para anexos e arquivos em entidades suportadas.
+
+---
+
+## Arquitetura Funcional
+
+Fluxo principal de negócio:
+
+1. Lead entra no CRM.
+2. Oportunidade evolui no pipeline (lista/kanban).
+3. Pré-orçamento com IA acelera construção da proposta.
+4. Orçamento é finalizado e acompanhado.
+5. Projeto é executado com fases, tarefas, roadmap e apontamento.
+6. Financeiro acompanha receitas/despesas por contexto (cliente/projeto/fornecedor/banco).
+7. Cliente acompanha execução no portal.
+
+---
+
+## Detalhes Técnicos Relevantes
+
+## Painéis Filament
+
+- **TeamPanel**
+  - Path: `/admin`
+  - Guard: `web`
+  - Tema Vite customizado
+  - Navegação agrupada: Projetos, CRM, Financeiro, Configurações
+
+- **ClientPanel**
+  - Path: `/portal`
+  - Guard: `client_portal`
+  - Acesso restrito aos projetos do cliente autenticado
+
+## Estrutura de Código
+
+- `app/Filament/TeamPanel`: recursos, páginas e widgets do painel admin
+- `app/Filament/ClientPanel`: recursos, páginas e widgets do portal
+- `app/Filament/TeamPanel/Clusters/Leads`: cluster de Leads com Kanban
+- `app/Models`: domínio de negócio
+- `app/Policies`: autorização
+- `app/Observers`: automações de domínio
+- `app/Services`: integrações e regras de aplicação (IA/precificação)
+
+## IA (Gemini)
+
+- Serviço dedicado em `GeminiService`.
+- Modelo padrão configurável por variável de ambiente.
+- Fallback de modelos quando houver indisponibilidade (404) de um modelo específico.
+
+## Banco de Dados e Seeds
+
+- Migrations orientadas a `migrate:fresh --seed`.
+- Seeders para:
+  - Roles/permissões
+  - Usuários
+  - Clientes e usuários de portal
+  - Leads
+  - Serviços e categorias
+  - Bancos
+  - Categorias financeiras
+  - Fornecedores e categorias
+  - Orçamentos
+  - Projetos
+
+---
+
+## Setup do Projeto
+
+## Pré-requisitos
+
+- PHP 8.2+
+- Composer
+- Node.js + npm
+- Docker (recomendado com Sail)
+
+## 1) Instalação rápida
+
+```bash
+composer run setup
+```
+
+Esse comando executa:
+
+1. Instala dependências PHP
+2. Cria `.env` (se não existir)
+3. Gera `APP_KEY`
+4. Executa migrations
+5. Instala dependências front-end
+6. Gera build de produção
+
+## 2) Rodando em desenvolvimento (sem Docker)
+
+```bash
+composer run dev
+```
+
+Sobe, em paralelo:
+
+- servidor Laravel
+- queue listener
+- pail (logs)
+- vite dev server
+
+## 3) Rodando com Sail (Docker)
+
+```bash
+./vendor/bin/sail up -d
+./vendor/bin/sail artisan migrate --seed
+./vendor/bin/sail npm run build
+```
+
+Serviços do `compose.yaml`:
+
+- app (`laravel.test`)
+- PostgreSQL
+- Redis
+- Mailpit
+
+## 4) Testes
+
+```bash
+composer run test
+```
+
+Para criar banco de testes no PostgreSQL do Sail:
+
+```bash
+make testing-db
+```
+
+---
+
+## Variáveis de Ambiente Importantes
+
+No `.env`, configurar especialmente:
+
+- Banco de dados (`DB_*`)
+- Redis (`REDIS_*`)
+- Mail (`MAIL_*`)
+- Gemini:
+
+```env
+GEMINI_API_KEY=
+GEMINI_MODEL=gemini-2.0-flash
+```
+
+---
+
+## Credenciais de Seed (Ambiente Local)
+
+O `DatabaseSeeder` garante um usuário admin padrão:
+
+- Email: `admin@projecthub.app`
+- Senha: `password`
+
+> Recomendação: altere imediatamente em qualquer ambiente compartilhado.
+
+---
+
+## Scripts Úteis
+
+```bash
+# Front-end
+npm run dev
+npm run build
+
+# Laravel
+php artisan migrate
+php artisan migrate:fresh --seed
+php artisan queue:listen
+php artisan pail
+
+# Sail
+./vendor/bin/sail artisan route:list
+./vendor/bin/sail artisan optimize:clear
+```
+
+---
+
+## Contribuição Técnica
+
+Para evoluir o projeto com consistência:
+
+1. Seguir o padrão de Resources do Filament já adotado (Schemas, Tables, Pages separados).
+2. Manter regras de autorização via Policies.
+3. Preferir Services para lógica de negócio complexa (ex.: IA e precificação).
+4. Atualizar seeders quando adicionar novos módulos essenciais.
+5. Validar comportamento nos dois painéis (`/admin` e `/portal`) quando a mudança afetar domínio compartilhado.
+
+---
+
+## Licença
+
+Este projeto está sob licença MIT.
