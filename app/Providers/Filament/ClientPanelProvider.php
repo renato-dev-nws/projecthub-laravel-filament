@@ -26,6 +26,9 @@ class ClientPanelProvider extends PanelProvider
             ->login()
             ->colors(['primary' => Color::Blue])
             ->brandName('Área do Cliente')
+            ->viteTheme('resources/css/filament/client/theme.css')
+            ->databaseNotifications()
+            ->databaseNotificationsPolling('30s')
             ->authGuard('client_portal')
             ->discoverResources(
                 in: app_path('Filament/ClientPanel/Resources'),

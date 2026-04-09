@@ -13,19 +13,16 @@ use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
-use Spatie\Sluggable\HasSlug;
-use Spatie\Sluggable\SlugOptions;
 
 class Project extends Model implements HasMedia
 {
     /** @use HasFactory<\Database\Factories\ProjectFactory> */
-    use HasFactory, SoftDeletes, LogsActivity, InteractsWithMedia, HasSlug;
+    use HasFactory, SoftDeletes, LogsActivity, InteractsWithMedia;
 
     protected $fillable = [
         'client_id',
         'quote_id',
         'name',
-        'slug',
         'code',
         'github_url',
         'description',
@@ -61,13 +58,6 @@ class Project extends Model implements HasMedia
             'client_portal_enabled' => 'boolean',
             'client_can_comment' => 'boolean',
         ];
-    }
-
-    public function getSlugOptions(): SlugOptions
-    {
-        return SlugOptions::create()
-            ->generateSlugsFrom('name')
-            ->saveSlugsTo('slug');
     }
 
     public function getActivitylogOptions(): LogOptions

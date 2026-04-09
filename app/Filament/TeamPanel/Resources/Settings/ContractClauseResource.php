@@ -12,6 +12,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -29,24 +30,35 @@ class ContractClauseResource extends Resource
 
     protected static ?int $navigationSort = 4;
 
+    protected static ?string $modelLabel = 'Cláusula de Contrato';
+
+    protected static ?string $pluralModelLabel = 'Cláusulas de Contrato';
+
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            TextInput::make('title')
-                ->label('Título')
-                ->required()
-                ->maxLength(255),
-            Textarea::make('content')
-                ->label('Conteúdo')
-                ->required()
-                ->rows(6),
-            TextInput::make('sort_order')
-                ->label('Ordem')
-                ->numeric()
-                ->default(0),
-            Toggle::make('is_active')
-                ->label('Ativa')
-                ->default(true),
+            Section::make('Dados da Cláusula')
+                ->schema([
+                    TextInput::make('title')
+                        ->label('Título')
+                        ->required()
+                        ->maxLength(255),
+                    Textarea::make('content')
+                        ->label('Conteúdo')
+                        ->required()
+                        ->rows(6),
+                ]),
+            Section::make('Configuração')
+                ->columns(2)
+                ->schema([
+                    TextInput::make('sort_order')
+                        ->label('Ordem')
+                        ->numeric()
+                        ->default(0),
+                    Toggle::make('is_active')
+                        ->label('Ativa')
+                        ->default(true),
+                ]),
         ]);
     }
 

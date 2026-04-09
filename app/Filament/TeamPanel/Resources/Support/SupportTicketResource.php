@@ -15,6 +15,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -26,78 +27,90 @@ class SupportTicketResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-lifebuoy';
 
-    protected static string|UnitEnum|null $navigationGroup = 'Projetos';
+    protected static string|UnitEnum|null $navigationGroup = 'CRM';
 
     protected static ?string $navigationLabel = 'Suporte';
 
-    protected static ?string $modelLabel = 'Ticket';
+    protected static ?int $navigationSort = 99;
+
+    protected static ?string $modelLabel = 'Ticket de Suporte';
 
     protected static ?string $pluralModelLabel = 'Tickets de Suporte';
 
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            TextInput::make('code')
-                ->label('Código')
-                ->disabled()
-                ->dehydrated(false),
-            Select::make('project_id')
-                ->label('Projeto')
-                ->relationship('project', 'name')
-                ->required()
-                ->live()
-                ->afterStateUpdated(function ($state, callable $set) {
-                    if (! $state) {
-                        return;
-                    }
+            Section::make('Dados do Ticket')
+                ->columns(2)
+                ->schema([
+                    TextInput::make('code')
+                        ->label('Código')
+                        ->disabled()
+                        ->dehydrated(false),
+                    Select::make('project_id')
+                        ->label('Projeto')
+                        ->relationship('project', 'name')
+                        ->required()
+                        ->live()
+                        ->afterStateUpdated(function ($state, callable $set) {
+                            if (! $state) {
+                                return;
+                            }
 
-                    $project = \App\Models\Project::find($state);
-                    $set('client_id', $project?->client_id);
-                    $set('project_manager_id', $project?->project_manager_id);
-                }),
-            Select::make('client_id')
-                ->label('Cliente')
-                ->relationship('client', 'company_name')
-                ->required(),
-            TextInput::make('subject')
-                ->label('Assunto')
-                ->required()
-                ->maxLength(255),
-            Textarea::make('description')
-                ->label('Descrição')
-                ->required()
-                ->rows(4),
-            Select::make('status')
-                ->label('Status')
-                ->options([
-                    'open' => 'Aberto',
-                    'in_progress' => 'Em andamento',
-                    'waiting_client' => 'Aguardando cliente',
-                    'resolved' => 'Resolvido',
-                    'closed' => 'Fechado',
-                ])
-                ->default('open')
-                ->required(),
-            Select::make('priority')
-                ->label('Prioridade')
-                ->options([
-                    'low' => 'Baixa',
-                    'medium' => 'Média',
-                    'high' => 'Alta',
-                    'urgent' => 'Urgente',
-                ])
-                ->default('medium')
-                ->required(),
-            Select::make('assigned_to')
-                ->label('Delegado para')
-                ->relationship('assignee', 'name')
-                ->searchable()
-                ->preload(),
-            Select::make('project_manager_id')
-                ->label('Gerente do Projeto')
-                ->relationship('projectManager', 'name')
-                ->searchable()
-                ->preload(),
+                            $project = \App\Models\Project::find($state);
+                            $set('client_id', $project?->client_id);
+                            $set('project_manager_id', $project?->project_manager_id);
+                        }),
+                    Select::make('client_id')
+                        ->label('Cliente')
+                        ->relationship('client', 'company_name')
+                        ->required(),
+                    TextInput::make('subject')
+                        ->label('Assunto')
+                        ->required()
+                        ->maxLength(255)
+                        ->columnSpanFull(),
+                    Textarea::make('description')
+                        ->label('Descrição')
+                        ->required()
+                        ->rows(4)
+                        ->columnSpanFull(),
+                ]),
+            Section::make('Acompanhamento')
+                ->columns(2)
+                ->schema([
+                    Select::make('status')
+                        ->label('Status')
+                        ->options([
+                            'open' => 'Aberto',
+                            'in_progress' => 'Em andamento',
+                            'waiting_client' => 'Aguardando cliente',
+                            'resolved' => 'Resolvido',
+                            'closed' => 'Fechado',
+                        ])
+                        ->default('open')
+                        ->required(),
+                    Select::make('priority')
+                        ->label('Prioridade')
+                        ->options([
+                            'low' => 'Baixa',
+                            'medium' => 'Média',
+                            'high' => 'Alta',
+                            'urgent' => 'Urgente',
+                        ])
+                        ->default('medium')
+                        ->required(),
+                    Select::make('assigned_to')
+                        ->label('Delegado para')
+                        ->relationship('assignee', 'name')
+                        ->searchable()
+                        ->preload(),
+                    Select::make('project_manager_id')
+                        ->label('Gerente do Projeto')
+                        ->relationship('projectManager', 'name')
+                        ->searchable()
+                        ->preload(),
+                ]),
         ]);
     }
 

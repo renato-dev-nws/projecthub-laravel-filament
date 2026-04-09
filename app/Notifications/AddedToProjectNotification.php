@@ -22,6 +22,7 @@ class AddedToProjectNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
+            'format' => 'filament',
             'title' => 'Você foi incluído em um projeto',
             'body' => "Você foi adicionado ao projeto {$this->project->code} - {$this->project->name}.",
             'project_id' => $this->project->id,

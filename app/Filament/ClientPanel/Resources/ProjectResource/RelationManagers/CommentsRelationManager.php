@@ -16,6 +16,11 @@ class CommentsRelationManager extends RelationManager
 
     protected static ?string $title = 'Comentários';
 
+    public function isReadOnly(): bool
+    {
+        return false;
+    }
+
     public function form(Schema $schema): Schema
     {
         return $schema
@@ -54,6 +59,8 @@ class CommentsRelationManager extends RelationManager
             ->headerActions([
                 CreateAction::make()
                     ->label('Novo comentário')
+                    ->modalHeading('Novo comentário')
+                    ->modalSubmitActionLabel('Publicar comentário')
                     ->visible(fn (): bool => (bool) $this->ownerRecord?->client_can_comment)
                     ->mutateDataUsing(function (array $data): array {
                         $data['is_internal'] = false;

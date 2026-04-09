@@ -86,7 +86,7 @@ class LatestProjectsWidget extends BaseWidget
                 Action::make('view')
                     ->label('Ver')
                     ->icon('heroicon-m-eye')
-                    ->url(fn (Project $record) => route('filament.admin.resources.projects.edit', $record)),
+                    ->url(fn (Project $record) => route('filament.admin.resources.projects.view', $record)),
             ])
             ->paginated(false);
     }

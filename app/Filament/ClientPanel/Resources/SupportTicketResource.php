@@ -10,6 +10,7 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -25,6 +26,10 @@ class SupportTicketResource extends Resource
 
     protected static ?string $navigationLabel = 'Suporte';
 
+    protected static ?string $modelLabel = 'Ticket de Suporte';
+
+    protected static ?string $pluralModelLabel = 'Tickets de Suporte';
+
     protected static ?int $navigationSort = 2;
 
     public static function getEloquentQuery(): Builder
@@ -37,50 +42,60 @@ class SupportTicketResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            TextInput::make('code')
-                ->label('Código')
-                ->disabled()
-                ->dehydrated(false),
-            Select::make('project_id')
-                ->label('Projeto')
-                ->options(function () {
-                    $clientId = auth('client_portal')->user()?->client_id;
+            Section::make('Dados do Ticket')
+                ->columns(2)
+                ->schema([
+                    TextInput::make('code')
+                        ->label('Código')
+                        ->disabled()
+                        ->dehydrated(false),
+                    Select::make('project_id')
+                        ->label('Projeto')
+                        ->options(function () {
+                            $clientId = auth('client_portal')->user()?->client_id;
 
-                    return Project::query()
-                        ->where('client_id', $clientId)
-                        ->where('client_portal_enabled', true)
-                        ->pluck('name', 'id');
-                })
-                ->required(),
-            TextInput::make('subject')
-                ->label('Assunto')
-                ->required()
-                ->maxLength(255),
-            Textarea::make('description')
-                ->label('Descrição')
-                ->required()
-                ->rows(4),
-            Select::make('priority')
-                ->label('Prioridade')
-                ->options([
-                    'low' => 'Baixa',
-                    'medium' => 'Média',
-                    'high' => 'Alta',
-                    'urgent' => 'Urgente',
-                ])
-                ->default('medium')
-                ->required(),
-            Select::make('status')
-                ->label('Status')
-                ->options([
-                    'open' => 'Aberto',
-                    'in_progress' => 'Em andamento',
-                    'waiting_client' => 'Aguardando cliente',
-                    'resolved' => 'Resolvido',
-                    'closed' => 'Fechado',
-                ])
-                ->default('open')
-                ->disabled(fn ($operation) => $operation === 'create'),
+                            return Project::query()
+                                ->where('client_id', $clientId)
+                                ->where('client_portal_enabled', true)
+                                ->pluck('name', 'id');
+                        })
+                        ->required(),
+                    TextInput::make('subject')
+                        ->label('Assunto')
+                        ->required()
+                        ->maxLength(255)
+                        ->columnSpanFull(),
+                    Textarea::make('description')
+                        ->label('Descrição')
+                        ->required()
+                        ->rows(4)
+                        ->columnSpanFull(),
+                ]),
+            Section::make('Acompanhamento')
+                ->columns(2)
+                ->schema([
+                    Select::make('priority')
+                        ->label('Prioridade')
+                        ->options([
+                            'low' => 'Baixa',
+                            'medium' => 'Média',
+                            'high' => 'Alta',
+                            'urgent' => 'Urgente',
+                        ])
+                        ->default('medium')
+                        ->required(),
+                    Select::make('status')
+                        ->label('Status')
+                        ->options([
+                            'open' => 'Aberto',
+                            'in_progress' => 'Em andamento',
+                            'waiting_client' => 'Aguardando cliente',
+                            'resolved' => 'Resolvido',
+                            'closed' => 'Fechado',
+                        ])
+                        ->default('open')
+                        ->disabled(fn ($operation) => $operation === 'create'),
+                ]),
         ]);
     }
 

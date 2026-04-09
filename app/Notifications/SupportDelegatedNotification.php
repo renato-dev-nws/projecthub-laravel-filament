@@ -22,10 +22,11 @@ class SupportDelegatedNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
+            'format' => 'filament',
             'title' => 'Ticket delegado para você',
             'body' => "Você recebeu o ticket {$this->ticket->code}: {$this->ticket->subject}",
             'ticket_id' => $this->ticket->id,
-            'ticket_edit_url' => "/admin/support-tickets/{$this->ticket->id}/edit",
+            'ticket_edit_url' => "/admin/support/support-tickets/{$this->ticket->id}/edit",
         ];
     }
 }

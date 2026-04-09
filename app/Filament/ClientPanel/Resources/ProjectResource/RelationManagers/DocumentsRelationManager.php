@@ -18,6 +18,11 @@ class DocumentsRelationManager extends RelationManager
 
     protected static ?string $title = 'Documentos';
 
+    public function isReadOnly(): bool
+    {
+        return false;
+    }
+
     public function form(Schema $schema): Schema
     {
         return $schema
@@ -79,6 +84,8 @@ class DocumentsRelationManager extends RelationManager
             ->headerActions([
                 CreateAction::make()
                     ->label('Enviar documento')
+                    ->modalHeading('Enviar documento')
+                    ->modalSubmitActionLabel('Salvar documento')
                     ->mutateDataUsing(function (array $data): array {
                         $data['uploader_type'] = ClientPortalUser::class;
                         $data['uploader_id'] = auth('client_portal')->id();

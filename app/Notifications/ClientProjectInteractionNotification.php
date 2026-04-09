@@ -25,6 +25,7 @@ class ClientProjectInteractionNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
+            'format' => 'filament',
             'title' => 'Nova interação do cliente',
             'body' => "{$this->authorName} {$this->action} no projeto {$this->project->code} - {$this->project->name}.",
             'project_id' => $this->project->id,

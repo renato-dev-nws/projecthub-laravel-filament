@@ -8,4 +8,6 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateContractClause extends CreateRecord
 {
     protected static string $resource = ContractClauseResource::class;
+
+    protected static ?string $title = 'Nova Cláusula de Contrato';
 }

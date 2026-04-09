@@ -22,10 +22,11 @@ class NewSupportTicketNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
+            'format' => 'filament',
             'title' => 'Novo ticket de suporte',
             'body' => "Ticket {$this->ticket->code}: {$this->ticket->subject}",
             'ticket_id' => $this->ticket->id,
-            'ticket_edit_url' => "/admin/support-tickets/{$this->ticket->id}/edit",
+            'ticket_edit_url' => "/admin/support/support-tickets/{$this->ticket->id}/edit",
         ];
     }
 }

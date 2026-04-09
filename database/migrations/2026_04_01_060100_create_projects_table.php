@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('slug')->unique()->nullable();
             $table->string('code')->unique();
             $table->string('github_url')->nullable();
             $table->foreignId('client_id')->constrained();

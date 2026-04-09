@@ -21,6 +21,11 @@ class DocumentsRelationManager extends RelationManager
 
     protected static ?string $title = 'Documentos';
 
+    public function isReadOnly(): bool
+    {
+        return false;
+    }
+
     public function form(Schema $schema): Schema
     {
         return $schema
@@ -102,7 +107,10 @@ class DocumentsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                CreateAction::make(),
+                CreateAction::make()
+                    ->label('Adicionar documento')
+                    ->modalHeading('Adicionar documento')
+                    ->modalSubmitActionLabel('Salvar documento'),
             ])
             ->recordActions([
                 EditAction::make(),

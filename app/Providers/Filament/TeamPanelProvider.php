@@ -38,6 +38,8 @@ class TeamPanelProvider extends PanelProvider
             ->favicon(asset('img/icon.svg'))
             ->darkModeBrandLogo(asset('img/logo-bg-dark.svg'))
             ->viteTheme('resources/css/filament/admin/theme.css')
+            ->databaseNotifications()
+            ->databaseNotificationsPolling('30s')
             ->navigationGroups([
                 NavigationGroup::make('Projetos'),
                 NavigationGroup::make('CRM'),

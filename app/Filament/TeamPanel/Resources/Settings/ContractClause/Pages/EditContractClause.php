@@ -10,6 +10,8 @@ class EditContractClause extends EditRecord
 {
     protected static string $resource = ContractClauseResource::class;
 
+    protected static ?string $title = 'Editar Cláusula de Contrato';
+
     protected function getHeaderActions(): array
     {
         return [

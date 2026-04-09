@@ -23,6 +23,11 @@ class RoadmapItemsRelationManager extends RelationManager
 
     protected static ?string $title = 'Roadmap';
 
+    public function isReadOnly(): bool
+    {
+        return false;
+    }
+
     public function form(Schema $schema): Schema
     {
         return $schema

@@ -10,10 +10,12 @@ class ListContractClauses extends ListRecords
 {
     protected static string $resource = ContractClauseResource::class;
 
+    protected static ?string $title = 'Cláusulas de Contrato';
+
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()->label('Nova Cláusula de Contrato'),
         ];
     }
 }

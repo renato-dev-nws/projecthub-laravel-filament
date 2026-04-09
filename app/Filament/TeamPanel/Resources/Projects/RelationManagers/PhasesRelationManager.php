@@ -22,6 +22,11 @@ class PhasesRelationManager extends RelationManager
 
     protected static ?string $title = 'Fases';
 
+    public function isReadOnly(): bool
+    {
+        return false;
+    }
+
     public function form(Schema $schema): Schema
     {
         return $schema

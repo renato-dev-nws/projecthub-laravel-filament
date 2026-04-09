@@ -16,7 +16,6 @@ use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 
 class ProjectForm
 {
@@ -51,28 +50,6 @@ class ProjectForm
         return $schema->columns(2)->components([
             Section::make('Informações do Projeto')
                 ->schema([
-                    TextInput::make('name')
-                        ->label('Nome do Projeto')
-                        ->required()
-                        ->maxLength(255)
-                        ->live(onBlur: true)
-                        ->afterStateUpdated(fn (string $state, Set $set) =>
-                            $set('slug', Str::slug($state))
-                        ),
-                    TextInput::make('slug')
-                        ->label('Slug')
-                        ->required()
-                        ->unique(ignoreRecord: true)
-                        ->maxLength(255),
-                    TextInput::make('code')
-                        ->label('Código')
-                        ->required()
-                        ->unique(ignoreRecord: true)
-                        ->maxLength(50),
-                    TextInput::make('github_url')
-                        ->label('Repositório GitHub')
-                        ->url()
-                        ->maxLength(255),
                     Select::make('client_id')
                         ->label('Cliente')
                         ->relationship('client', 'company_name')
@@ -124,6 +101,19 @@ class ProjectForm
                                 ->label('Telefone')
                                 ->tel(),
                         ]),
+                    TextInput::make('name')
+                        ->label('Nome do Projeto')
+                        ->required()
+                        ->maxLength(255),
+                    TextInput::make('code')
+                        ->label('Código')
+                        ->required()
+                        ->unique(ignoreRecord: true)
+                        ->maxLength(50),
+                    TextInput::make('github_url')
+                        ->label('Repositório GitHub')
+                        ->url()
+                        ->maxLength(255),
                     Select::make('quote_id')
                         ->label('Orçamento')
                         ->options(function (Get $get) {

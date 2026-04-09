@@ -2,6 +2,7 @@
 
 namespace App\Filament\TeamPanel\Resources\Projects\RelationManagers;
 
+use App\Models\ClientPortalUser;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
@@ -19,6 +20,11 @@ class CommentsRelationManager extends RelationManager
     protected static string $relationship = 'comments';
 
     protected static ?string $title = 'Comentários';
+
+    public function isReadOnly(): bool
+    {
+        return false;
+    }
 
     public function form(Schema $schema): Schema
     {
@@ -40,8 +46,10 @@ class CommentsRelationManager extends RelationManager
             ->recordTitleAttribute('content')
             ->columns([
                 Tables\Columns\TextColumn::make('author_type')
-                    ->label('Autor (Tipo)')
-                    ->formatStateUsing(fn ($state) => class_basename($state)),
+                    ->label('Origem')
+                    ->badge()
+                    ->color(fn ($state) => $state === ClientPortalUser::class ? 'info' : 'gray')
+                    ->formatStateUsing(fn ($state) => $state === ClientPortalUser::class ? 'Cliente' : 'Equipe'),
                 Tables\Columns\TextColumn::make('content')
                     ->label('Comentário')
                     ->limit(60)
@@ -61,7 +69,10 @@ class CommentsRelationManager extends RelationManager
                     ->query(fn ($query) => $query->where('is_internal', true)),
             ])
             ->headerActions([
-                CreateAction::make(),
+                CreateAction::make()
+                    ->label('Novo comentário')
+                    ->modalHeading('Novo comentário')
+                    ->modalSubmitActionLabel('Publicar comentário'),
             ])
             ->recordActions([
                 EditAction::make(),
