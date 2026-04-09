@@ -7,7 +7,7 @@ Sistema completo para gestão de operações de uma software house/agência digi
 O projeto possui dois painéis Filament:
 
 - **TeamPanel** (`/admin`): operação interna da equipe (vendas, projetos, financeiro e configurações)
-- **ClientPanel** (`/portal`): portal do cliente para acompanhamento dos próprios projetos
+- **ClientPanel** (`/client`): área do cliente para acompanhamento dos próprios projetos
 
 Stack principal:
 
@@ -154,7 +154,7 @@ Fluxo principal de negócio:
   - Navegação agrupada: Projetos, CRM, Financeiro, Configurações
 
 - **ClientPanel**
-  - Path: `/portal`
+   - Path: `/client`
   - Guard: `client_portal`
   - Acesso restrito aos projetos do cliente autenticado
 
@@ -312,7 +312,7 @@ Para evoluir o projeto com consistência:
 2. Manter regras de autorização via Policies.
 3. Preferir Services para lógica de negócio complexa (ex.: IA e precificação).
 4. Atualizar seeders quando adicionar novos módulos essenciais.
-5. Validar comportamento nos dois painéis (`/admin` e `/portal`) quando a mudança afetar domínio compartilhado.
+5. Validar comportamento nos dois painéis (`/admin` e `/client`) quando a mudança afetar domínio compartilhado.
 
 ---
 

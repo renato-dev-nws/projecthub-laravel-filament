@@ -19,11 +19,11 @@ class QuoteSeeder extends Seeder
         $client2 = Client::where('company_name', 'Inovação Digital S/A')->first();
         $lead = Lead::where('company', 'Finance Tech Ltda')->first();
 
-        $devWeb = Service::where('code', 'DEV-WEB')->first();
-        $designUx = Service::where('code', 'DESIGN-UX')->first();
-        $devApi = Service::where('code', 'DEV-API')->first();
-        $devMob = Service::where('code', 'DEV-MOB')->first();
-        $devOps = Service::where('code', 'DEVOPS')->first();
+        $devWeb = Service::where('code', 'BACKEND-LARAVEL')->firstOrFail();
+        $designUx = Service::where('code', 'CRIACAO-LAYOUT')->firstOrFail();
+        $devApi = Service::where('code', 'API-LARAVEL')->firstOrFail();
+        $devMob = Service::where('code', 'FRONTEND-REACT')->firstOrFail();
+        $devOps = Service::where('code', 'CONFIG-INFRA')->firstOrFail();
 
         // Quote 1 - Aprovada
         $quote1 = Quote::create([
@@ -47,10 +47,10 @@ class QuoteSeeder extends Seeder
             'viewed_at' => now()->subMonths(2)->subDays(5),
         ]);
 
-        QuoteItem::create(['quote_id' => $quote1->id, 'service_id' => $devWeb->id, 'description' => 'Desenvolvimento Front-end + Back-end', 'quantity' => 400, 'unit_price' => 150.00, 'sort_order' => 1]);
+        QuoteItem::create(['quote_id' => $quote1->id, 'service_id' => $devWeb->id, 'description' => 'Desenvolvimento Front-end + Back-end', 'quantity' => 400, 'unit_price' => 90.00, 'sort_order' => 1]);
         QuoteItem::create(['quote_id' => $quote1->id, 'service_id' => $designUx->id, 'description' => 'UI/UX Design completo', 'quantity' => 100, 'unit_price' => 120.00, 'sort_order' => 2]);
-        QuoteItem::create(['quote_id' => $quote1->id, 'service_id' => $devApi->id, 'description' => 'API e Integrações', 'quantity' => 150, 'unit_price' => 160.00, 'sort_order' => 3]);
-        QuoteItem::create(['quote_id' => $quote1->id, 'service_id' => $devOps->id, 'description' => 'Setup DevOps + Deploy', 'quantity' => 80, 'unit_price' => 170.00, 'sort_order' => 4]);
+        QuoteItem::create(['quote_id' => $quote1->id, 'service_id' => $devApi->id, 'description' => 'API e Integrações', 'quantity' => 150, 'unit_price' => 90.00, 'sort_order' => 3]);
+        QuoteItem::create(['quote_id' => $quote1->id, 'service_id' => $devOps->id, 'description' => 'Setup DevOps + Deploy', 'quantity' => 80, 'unit_price' => 100.00, 'sort_order' => 4]);
 
         // Quote 2 - Visualizada
         $quote2 = Quote::create([
@@ -73,7 +73,7 @@ class QuoteSeeder extends Seeder
             'viewed_at' => now()->subDays(3),
         ]);
 
-        QuoteItem::create(['quote_id' => $quote2->id, 'service_id' => $devMob->id, 'description' => 'App iOS + Android (React Native)', 'quantity' => 380, 'unit_price' => 180.00, 'sort_order' => 1]);
+        QuoteItem::create(['quote_id' => $quote2->id, 'service_id' => $devMob->id, 'description' => 'App iOS + Android (React Native)', 'quantity' => 380, 'unit_price' => 90.00, 'sort_order' => 1]);
         QuoteItem::create(['quote_id' => $quote2->id, 'service_id' => $designUx->id, 'description' => 'Design das telas mobile', 'quantity' => 80, 'unit_price' => 120.00, 'sort_order' => 2]);
 
         // Quote 3 - Rascunho para lead
@@ -95,8 +95,8 @@ class QuoteSeeder extends Seeder
             'created_by' => $am?->id,
         ]);
 
-        QuoteItem::create(['quote_id' => $quote3->id, 'service_id' => $devWeb->id, 'description' => 'Portal Web', 'quantity' => 300, 'unit_price' => 150.00, 'sort_order' => 1]);
-        QuoteItem::create(['quote_id' => $quote3->id, 'service_id' => $devMob->id, 'description' => 'App Mobile', 'quantity' => 250, 'unit_price' => 180.00, 'sort_order' => 2]);
+        QuoteItem::create(['quote_id' => $quote3->id, 'service_id' => $devWeb->id, 'description' => 'Portal Web', 'quantity' => 300, 'unit_price' => 90.00, 'sort_order' => 1]);
+        QuoteItem::create(['quote_id' => $quote3->id, 'service_id' => $devMob->id, 'description' => 'App Mobile', 'quantity' => 250, 'unit_price' => 90.00, 'sort_order' => 2]);
         QuoteItem::create(['quote_id' => $quote3->id, 'service_id' => $designUx->id, 'description' => 'Design', 'quantity' => 40, 'unit_price' => 120.00, 'sort_order' => 3]);
     }
 }

@@ -15,15 +15,13 @@ return new class extends Migration
             $table->id();
             $table->foreignId('project_id')->constrained()->cascadeOnDelete();
             $table->nullableMorphs('commentable');
-            $table->string('author_type');
-            $table->unsignedBigInteger('author_id');
+            $table->nullableMorphs('author');
             $table->text('content');
             $table->foreignId('parent_id')->nullable()->constrained('project_comments');
             $table->boolean('is_internal')->default(false);
             $table->timestamps();
             $table->softDeletes();
 
-            $table->index(['author_type', 'author_id']);
             $table->index('project_id');
         });
     }

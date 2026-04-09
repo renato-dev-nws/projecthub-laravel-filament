@@ -14,11 +14,12 @@ return new class extends Migration
         Schema::create('project_documents', function (Blueprint $table) {
             $table->id();
             $table->foreignId('project_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('created_by')->constrained('users');
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->nullableMorphs('uploader');
             $table->string('title');
             $table->string('slug');
             $table->longText('content')->nullable();
-            $table->enum('type', ['markdown', 'file', 'link'])->default('markdown');
+            $table->enum('type', ['file', 'link'])->default('file');
             $table->string('file_path')->nullable();
             $table->string('external_url')->nullable();
             $table->boolean('is_public')->default(false);

@@ -22,10 +22,10 @@ class ClientPanelProvider extends PanelProvider
     {
         return $panel
             ->id('client')
-            ->path('portal')
+            ->path('client')
             ->login()
             ->colors(['primary' => Color::Blue])
-            ->brandName('Meus Projetos')
+            ->brandName('Área do Cliente')
             ->authGuard('client_portal')
             ->discoverResources(
                 in: app_path('Filament/ClientPanel/Resources'),

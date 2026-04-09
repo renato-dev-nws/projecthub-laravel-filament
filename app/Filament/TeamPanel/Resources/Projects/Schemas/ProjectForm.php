@@ -2,7 +2,9 @@
 
 namespace App\Filament\TeamPanel\Resources\Projects\Schemas;
 
+use App\Models\ProjectMember;
 use App\Models\Quote;
+use App\Models\User;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\RichEditor;
@@ -13,12 +15,39 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class ProjectForm
 {
     public static function configure(Schema $schema): Schema
     {
+        $canViewFinancials = function ($record = null): bool {
+            $user = Auth::user();
+
+            if (! $user instanceof User) {
+                return false;
+            }
+
+            if ($user->hasAnyRole(['Super Admin', 'Admin', 'Account Manager'])) {
+                return true;
+            }
+
+            if ($record && $record->project_manager_id === $user->id) {
+                return true;
+            }
+
+            if (! $record) {
+                return $user->hasRole('Project Manager');
+            }
+
+            return ProjectMember::query()
+                ->where('project_id', $record->id)
+                ->where('user_id', $user->id)
+                ->where('can_view_financials', true)
+                ->exists();
+        };
+
         return $schema->columns(2)->components([
             Section::make('Informações do Projeto')
                 ->schema([
@@ -40,6 +69,10 @@ class ProjectForm
                         ->required()
                         ->unique(ignoreRecord: true)
                         ->maxLength(50),
+                    TextInput::make('github_url')
+                        ->label('Repositório GitHub')
+                        ->url()
+                        ->maxLength(255),
                     Select::make('client_id')
                         ->label('Cliente')
                         ->relationship('client', 'company_name')
@@ -102,6 +135,7 @@ class ProjectForm
                                 ->pluck('title', 'id');
                         })
                         ->disabled(fn (Get $get) => ! $get('client_id'))
+                        ->visible(fn ($record) => $canViewFinancials($record))
                         ->helperText(fn (Get $get) => ! $get('client_id')
                             ? 'Selecione um cliente primeiro para ver os orçamentos disponíveis'
                             : null)
@@ -149,6 +183,7 @@ class ProjectForm
                     TextInput::make('budget')
                         ->label('Orçamento')
                         ->numeric()
+                        ->visible(fn ($record) => $canViewFinancials($record))
                         ->prefix('R$'),
                 ]),
 
@@ -162,10 +197,10 @@ class ProjectForm
                         ->preload(),
                 ]),
 
-            Section::make('Configurações do Portal')
+            Section::make('Configurações da Área do Cliente')
                 ->schema([
                     Toggle::make('client_portal_enabled')
-                        ->label('Habilitar Portal do Cliente')
+                        ->label('Habilitar Área do Cliente')
                         ->default(true),
                     Toggle::make('client_can_comment')
                         ->label('Permitir Comentários do Cliente')

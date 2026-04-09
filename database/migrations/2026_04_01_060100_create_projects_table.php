@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug')->unique()->nullable();
             $table->string('code')->unique();
+            $table->string('github_url')->nullable();
             $table->foreignId('client_id')->constrained();
             $table->foreignId('quote_id')->nullable()->constrained();
             $table->foreignId('project_manager_id')->constrained('users');

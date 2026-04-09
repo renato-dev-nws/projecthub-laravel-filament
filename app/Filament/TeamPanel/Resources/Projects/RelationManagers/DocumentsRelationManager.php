@@ -8,7 +8,6 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -33,23 +32,22 @@ class DocumentsRelationManager extends RelationManager
                 Select::make('type')
                     ->label('Tipo')
                     ->options([
-                        'markdown' => 'Markdown',
                         'file' => 'Arquivo',
                         'link' => 'Link Externo',
                     ])
-                    ->default('markdown')
+                    ->default('file')
                     ->reactive()
                     ->required(),
-                RichEditor::make('content')
-                    ->label('Conteúdo')
-                    ->visible(fn ($get) => $get('type') === 'markdown'),
                 FileUpload::make('file_path')
                     ->label('Arquivo')
-                    ->visible(fn ($get) => $get('type') === 'file'),
+                    ->visible(fn ($get) => $get('type') === 'file')
+                    ->directory('project-documents')
+                    ->required(fn ($get) => $get('type') === 'file'),
                 TextInput::make('external_url')
                     ->label('URL Externa')
                     ->url()
-                    ->visible(fn ($get) => $get('type') === 'link'),
+                    ->visible(fn ($get) => $get('type') === 'link')
+                    ->required(fn ($get) => $get('type') === 'link'),
                 Select::make('visibility')
                     ->label('Visibilidade')
                     ->options([
@@ -77,7 +75,6 @@ class DocumentsRelationManager extends RelationManager
                     ->label('Tipo')
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'markdown' => 'Markdown',
                         'file' => 'Arquivo',
                         'link' => 'Link',
                     }),

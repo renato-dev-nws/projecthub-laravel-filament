@@ -27,6 +27,7 @@ class Project extends Model implements HasMedia
         'name',
         'slug',
         'code',
+        'github_url',
         'description',
         'project_manager_id',
         'status',
@@ -132,6 +133,11 @@ class Project extends Model implements HasMedia
     public function timeLogs(): HasMany
     {
         return $this->hasMany(TimeLog::class);
+    }
+
+    public function supportTickets(): HasMany
+    {
+        return $this->hasMany(SupportTicket::class);
     }
 
     public function recalculateProgress(): void

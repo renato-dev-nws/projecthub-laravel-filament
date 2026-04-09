@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId('project_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('role')->default('member');
+            $table->decimal('hourly_rate', 15, 2)->nullable();
+            $table->boolean('can_view_financials')->default(false);
             $table->date('joined_at')->nullable();
             $table->timestamps();
 

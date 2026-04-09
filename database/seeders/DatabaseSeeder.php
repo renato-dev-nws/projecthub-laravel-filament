@@ -33,10 +33,12 @@ class DatabaseSeeder extends Seeder
             LeadSeeder::class,
             ServiceCategorySeeder::class,
             ServiceSeeder::class,
+            ServicePricingTierSeeder::class,
             BankSeeder::class,
             FinancialCategorySeeder::class,
             SupplierCategorySeeder::class,
             SupplierSeeder::class,
+            ContractClauseSeeder::class,
             QuoteSeeder::class,
             ProjectSeeder::class,
         ]);

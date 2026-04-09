@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
@@ -16,8 +16,15 @@ class ProjectDocument extends Model
     protected static function booted(): void
     {
         static::creating(function (ProjectDocument $document): void {
-            if (blank($document->created_by) && Auth::check()) {
-                $document->created_by = Auth::id();
+            if (blank($document->created_by) && auth('web')->check()) {
+                $document->created_by = auth('web')->id();
+                $document->uploader_type = User::class;
+                $document->uploader_id = auth('web')->id();
+            }
+
+            if (blank($document->uploader_id) && auth('client_portal')->check()) {
+                $document->uploader_type = ClientPortalUser::class;
+                $document->uploader_id = auth('client_portal')->id();
             }
         });
     }
@@ -25,6 +32,8 @@ class ProjectDocument extends Model
     protected $fillable = [
         'project_id',
         'created_by',
+        'uploader_type',
+        'uploader_id',
         'title',
         'slug',
         'content',
@@ -66,5 +75,10 @@ class ProjectDocument extends Model
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function uploader(): MorphTo
+    {
+        return $this->morphTo();
     }
 }

@@ -3,6 +3,11 @@
 namespace App\Filament\ClientPanel\Resources;
 
 use App\Filament\ClientPanel\Resources\ProjectResource\Pages;
+use App\Filament\ClientPanel\Resources\ProjectResource\RelationManagers\CommentsRelationManager;
+use App\Filament\ClientPanel\Resources\ProjectResource\RelationManagers\DocumentsRelationManager;
+use App\Filament\ClientPanel\Resources\ProjectResource\RelationManagers\PhasesRelationManager;
+use App\Filament\ClientPanel\Resources\ProjectResource\RelationManagers\RoadmapItemsRelationManager;
+use App\Filament\ClientPanel\Resources\ProjectResource\RelationManagers\TasksRelationManager;
 use App\Models\Project;
 use Filament\Actions\ViewAction;
 use Filament\Resources\Resource;
@@ -37,6 +42,21 @@ class ProjectResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->components([]);
+    }
+
+    public static function canCreate(): bool
+    {
+        return false;
+    }
+
+    public static function canEdit($record): bool
+    {
+        return false;
+    }
+
+    public static function canDelete($record): bool
+    {
+        return false;
     }
 
     public static function table(Table $table): Table
@@ -114,6 +134,17 @@ class ProjectResource extends Resource
                 ViewAction::make(),
             ])
             ->toolbarActions([]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            PhasesRelationManager::class,
+            TasksRelationManager::class,
+            RoadmapItemsRelationManager::class,
+            DocumentsRelationManager::class,
+            CommentsRelationManager::class,
+        ];
     }
 
     public static function getPages(): array

@@ -21,14 +21,14 @@ class ClientPortalAuthTest extends TestCase
 
     public function test_unauthenticated_user_is_redirected_to_portal_login(): void
     {
-        $response = $this->get('/portal');
+        $response = $this->get('/client');
 
-        $response->assertRedirect('/portal/login');
+        $response->assertRedirect('/client/login');
     }
 
     public function test_portal_login_page_is_accessible(): void
     {
-        $response = $this->get('/portal/login');
+        $response = $this->get('/client/login');
 
         $response->assertStatus(200);
     }
@@ -37,7 +37,7 @@ class ClientPortalAuthTest extends TestCase
     {
         $portalUser = ClientPortalUser::factory()->create(['is_active' => true]);
 
-        $response = $this->actingAs($portalUser, 'client_portal')->get('/portal');
+        $response = $this->actingAs($portalUser, 'client_portal')->get('/client');
 
         $response->assertSuccessful();
     }
@@ -46,7 +46,7 @@ class ClientPortalAuthTest extends TestCase
     {
         $portalUser = ClientPortalUser::factory()->inactive()->create();
 
-        $response = $this->actingAs($portalUser, 'client_portal')->get('/portal');
+        $response = $this->actingAs($portalUser, 'client_portal')->get('/client');
 
         // Filament calls canAccessPanel(), which returns false for inactive users
         $response->assertStatus(403);
@@ -56,8 +56,8 @@ class ClientPortalAuthTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $response = $this->actingAs($user)->get('/portal');
+        $response = $this->actingAs($user)->get('/client');
 
-        $response->assertRedirect('/portal/login');
+        $response->assertRedirect('/client/login');
     }
 }

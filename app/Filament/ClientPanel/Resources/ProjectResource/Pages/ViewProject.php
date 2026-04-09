@@ -63,6 +63,11 @@ class ViewProject extends ViewRecord
                             ->label('Gerente do Projeto')
                             ->icon('heroicon-m-user'),
 
+                        TextEntry::make('github_url')
+                            ->label('GitHub')
+                            ->url(fn ($state) => filled($state) ? $state : null)
+                            ->openUrlInNewTab(),
+
                         TextEntry::make('start_date')
                             ->label('Data de Início')
                             ->date('d/m/Y'),
@@ -75,62 +80,6 @@ class ViewProject extends ViewRecord
                             ->label('Descrição')
                             ->columnSpanFull(),
                     ]),
-
-                Section::make('Fases do Projeto')
-                    ->schema([
-                        TextEntry::make('phases_summary')
-                            ->label('')
-                            ->state(function ($record) {
-                                $phases = $record->phases()->orderBy('sort_order')->get();
-                                if ($phases->isEmpty()) {
-                                    return 'Nenhuma fase cadastrada.';
-                                }
-                                $labels = [
-                                    'planned'     => 'Planejada',
-                                    'in_progress' => 'Em Andamento',
-                                    'completed'   => 'Concluída',
-                                    'cancelled'   => 'Cancelada',
-                                    'pending'     => 'Pendente',
-                                ];
-                                return $phases->map(function ($phase) use ($labels) {
-                                    $status = $labels[$phase->status] ?? $phase->status;
-                                    $dates = ($phase->start_date && $phase->end_date)
-                                        ? " ({$phase->start_date->format('d/m/Y')} → {$phase->end_date->format('d/m/Y')})"
-                                        : '';
-                                    return "• {$phase->name} — {$status}{$dates}";
-                                })->join("\n");
-                            })
-                            ->columnSpanFull(),
-                    ])
-                    ->collapsible(),
-
-                Section::make('Tarefas')
-                    ->schema([
-                        TextEntry::make('tasks_summary')
-                            ->label('')
-                            ->state(function ($record) {
-                                $tasks = $record->tasks()
-                                    ->whereIn('status', ['todo', 'in_progress', 'review', 'done'])
-                                    ->orderBy('due_date')
-                                    ->get();
-                                if ($tasks->isEmpty()) {
-                                    return 'Nenhuma tarefa cadastrada.';
-                                }
-                                $labels = [
-                                    'todo'        => 'A Fazer',
-                                    'in_progress' => 'Em Progresso',
-                                    'review'      => 'Em Revisão',
-                                    'done'        => 'Concluída',
-                                ];
-                                return $tasks->map(function ($task) use ($labels) {
-                                    $status = $labels[$task->status] ?? $task->status;
-                                    $due = $task->due_date ? " — Prazo: {$task->due_date->format('d/m/Y')}" : '';
-                                    return "• {$task->title} [{$status}]{$due}";
-                                })->join("\n");
-                            })
-                            ->columnSpanFull(),
-                    ])
-                    ->collapsible(),
             ]);
     }
 }

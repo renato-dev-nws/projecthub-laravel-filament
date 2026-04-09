@@ -11,3 +11,19 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+.fi-sidebar {
+    background-color: rgb(15 23 42) !important;
+}
+
+.fi-main {
+    background-color: rgb(248 250 252) !important;
+}
+
+.dark .fi-main {
+    background-color: rgb(2 6 23) !important;
+}
+
+.dark .fi-sidebar {
+    background-color: rgb(15 23 42) !important;
+}

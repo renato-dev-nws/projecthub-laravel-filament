@@ -5,6 +5,7 @@ namespace App\Filament\TeamPanel\Resources\Projects;
 use App\Filament\TeamPanel\Resources\Projects\Pages\CreateProject;
 use App\Filament\TeamPanel\Resources\Projects\Pages\EditProject;
 use App\Filament\TeamPanel\Resources\Projects\Pages\ListProjects;
+use App\Filament\TeamPanel\Resources\Projects\Pages\ViewProject;
 use App\Filament\TeamPanel\Resources\Projects\Schemas\ProjectForm;
 use App\Filament\TeamPanel\Resources\Projects\Tables\ProjectsTable;
 use App\Models\Project;
@@ -58,6 +59,7 @@ class ProjectResource extends Resource
         return [
             'index'  => ListProjects::route('/'),
             'create' => CreateProject::route('/create'),
+            'view'   => ViewProject::route('/{record}'),
             'edit'   => EditProject::route('/{record}/edit'),
         ];
     }

@@ -4,7 +4,9 @@ namespace App\Filament\TeamPanel\Resources\Projects\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\Action;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -80,6 +82,13 @@ class ProjectsTable
                     ->relationship('projectManager', 'name'),
             ])
             ->recordActions([
+                Action::make('contract')
+                    ->label('Contrato')
+                    ->icon('heroicon-o-document-text')
+                    ->url(fn ($record) => route('projects.contract.pdf', $record))
+                    ->openUrlInNewTab()
+                    ->color('gray'),
+                ViewAction::make(),
                 EditAction::make(),
             ])
             ->toolbarActions([
