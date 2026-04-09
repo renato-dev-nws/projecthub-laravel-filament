@@ -41,12 +41,12 @@ class PhasesRelationManager extends RelationManager
                 Select::make('status')
                     ->label('Status')
                     ->options([
-                        'planned' => 'Planejada',
+                        'pending' => 'Pendente',
                         'in_progress' => 'Em Andamento',
                         'completed' => 'Concluída',
-                        'cancelled' => 'Cancelada',
+                        'blocked' => 'Bloqueada',
                     ])
-                    ->default('planned')
+                    ->default('pending')
                     ->required(),
                 DatePicker::make('start_date')
                     ->label('Data de Início'),
@@ -71,16 +71,18 @@ class PhasesRelationManager extends RelationManager
                     ->label('Status')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
-                        'planned' => 'gray',
+                        'pending' => 'gray',
                         'in_progress' => 'warning',
                         'completed' => 'success',
-                        'cancelled' => 'danger',
+                        'blocked' => 'danger',
+                        default => 'gray',
                     })
                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'planned' => 'Planejada',
+                        'pending' => 'Pendente',
                         'in_progress' => 'Em Andamento',
                         'completed' => 'Concluída',
-                        'cancelled' => 'Cancelada',
+                        'blocked' => 'Bloqueada',
+                        default => $state,
                     }),
                 Tables\Columns\TextColumn::make('start_date')
                     ->label('Início')

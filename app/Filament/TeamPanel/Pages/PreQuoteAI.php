@@ -137,11 +137,13 @@ PROMPT;
             ]);
 
             foreach ($phaseData['items'] ?? [] as $itemOrder => $itemData) {
+                $itemDescription = Str::limit((string) ($itemData['description'] ?? ''), 255, '');
+
                 QuoteItem::create([
                     'quote_id'       => $quote->id,
                     'quote_phase_id' => $phase->id,
                     'service_id'     => $itemData['service_id'],
-                    'description'    => $itemData['description'],
+                    'description'    => $itemDescription,
                     'hours'          => $itemData['hours'],
                     'unit_price'     => $itemData['unit_price'],
                     'quantity'       => $itemData['hours'],
