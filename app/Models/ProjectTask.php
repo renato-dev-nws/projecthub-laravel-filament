@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -14,7 +15,44 @@ use App\Observers\ProjectTaskObserver;
 #[ObservedBy(ProjectTaskObserver::class)]
 class ProjectTask extends Model
 {
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
+
+    public const STATUS_LABELS = [
+        'todo' => 'A Fazer',
+        'in_progress' => 'Em Andamento',
+        'review' => 'Em Revisão',
+        'done' => 'Concluída',
+        'blocked' => 'Bloqueada',
+    ];
+
+    public const STATUS_COLORS = [
+        'todo' => 'gray',
+        'in_progress' => 'info',
+        'review' => 'warning',
+        'done' => 'success',
+        'blocked' => 'danger',
+    ];
+
+    public const OPEN_STATUSES = [
+        'todo',
+        'in_progress',
+        'review',
+        'blocked',
+    ];
+
+    public const PRIORITY_LABELS = [
+        'low' => 'Baixa',
+        'medium' => 'Média',
+        'high' => 'Alta',
+        'critical' => 'Crítica',
+    ];
+
+    public const PRIORITY_COLORS = [
+        'low' => 'gray',
+        'medium' => 'warning',
+        'high' => 'danger',
+        'critical' => 'danger',
+    ];
 
     protected static function booted(): void
     {
@@ -95,5 +133,25 @@ class ProjectTask extends Model
     public function timeLogs(): HasMany
     {
         return $this->hasMany(TimeLog::class, 'task_id');
+    }
+
+    public static function getStatusLabel(?string $status): string
+    {
+        return self::STATUS_LABELS[$status ?? ''] ?? (string) $status;
+    }
+
+    public static function getStatusColor(?string $status): string
+    {
+        return self::STATUS_COLORS[$status ?? ''] ?? 'gray';
+    }
+
+    public static function getPriorityLabel(?string $priority): string
+    {
+        return self::PRIORITY_LABELS[$priority ?? ''] ?? (string) $priority;
+    }
+
+    public static function getPriorityColor(?string $priority): string
+    {
+        return self::PRIORITY_COLORS[$priority ?? ''] ?? 'gray';
     }
 }

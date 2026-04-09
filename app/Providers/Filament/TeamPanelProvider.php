@@ -34,7 +34,7 @@ class TeamPanelProvider extends PanelProvider
             ->brandLogo(asset('img/logo.svg'))
             ->brandLogoHeight('2.5rem')
             ->brandName('')
-            ->topNavigation()
+            //->topNavigation()
             //->sidebarCollapsibleOnDesktop()
             ->favicon(asset('img/icon.svg'))
             ->darkModeBrandLogo(asset('img/logo-bg-dark.svg'))
