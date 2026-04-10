@@ -11,7 +11,7 @@ class SupportTicketPolicy
     public function viewAny($user): bool
     {
         if ($user instanceof User) {
-            return $user->hasAnyRole(['Super Admin', 'Admin', 'Project Manager', 'Developer', 'Designer', 'Account Manager']);
+            return $user->hasPermissionTo('support.view_any');
         }
 
         if ($user instanceof ClientPortalUser) {
@@ -24,6 +24,10 @@ class SupportTicketPolicy
     public function view($user, SupportTicket $ticket): bool
     {
         if ($user instanceof User) {
+            if (! $user->hasPermissionTo('support.view_any')) {
+                return false;
+            }
+
             if ($user->hasAnyRole(['Super Admin', 'Admin', 'Account Manager'])) {
                 return true;
             }
@@ -44,16 +48,22 @@ class SupportTicketPolicy
 
     public function create($user): bool
     {
-        return $this->viewAny($user);
+        return $user instanceof User
+            ? $user->hasPermissionTo('support.create')
+            : $this->viewAny($user);
     }
 
     public function update($user, SupportTicket $ticket): bool
     {
-        return $this->view($user, $ticket);
+        if (! $user instanceof User) {
+            return false;
+        }
+
+        return $user->hasPermissionTo('support.update') && $this->view($user, $ticket);
     }
 
     public function delete($user, SupportTicket $ticket): bool
     {
-        return $user instanceof User && $user->hasAnyRole(['Super Admin', 'Admin']);
+        return $user instanceof User && $user->hasPermissionTo('support.delete');
     }
 }

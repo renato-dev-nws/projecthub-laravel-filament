@@ -46,6 +46,7 @@ class TeamPanelProvider extends PanelProvider
                 NavigationGroup::make('CRM'),
                 NavigationGroup::make('Financeiro'),
                 NavigationGroup::make('Configurações'),
+                NavigationGroup::make('Acesso'),
             ])
             ->discoverClusters(
                 in: app_path('Filament/TeamPanel/Clusters'),

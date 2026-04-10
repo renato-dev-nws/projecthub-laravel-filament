@@ -7,6 +7,7 @@ use App\Models\Quote;
 use App\Models\QuoteItem;
 use App\Models\QuotePhase;
 use App\Models\Service;
+use App\Models\User;
 use App\Services\GeminiService;
 use App\Services\PricingCalculatorService;
 use BackedEnum;
@@ -29,6 +30,15 @@ class PreQuoteAI extends Page
     protected static UnitEnum|string|null $navigationGroup = 'Projetos';
     protected static ?int $navigationSort = 4;
     protected static BackedEnum|string|null $navigationIcon = \Filament\Support\Icons\Heroicon::OutlinedSparkles;
+
+    public static function canAccess(): bool
+    {
+        $user = Auth::user();
+
+        return $user instanceof User
+            && $user->hasPermissionTo('module.projects')
+            && $user->hasPermissionTo('quotes.create');
+    }
 
     public ?int $lead_id = null;
     public string $project_description = '';

@@ -3,10 +3,13 @@
 namespace App\Filament\TeamPanel\Widgets;
 
 use App\Models\Project;
+use App\Models\User;
 use Filament\Actions\Action;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class LatestProjectsWidget extends BaseWidget
 {
@@ -14,18 +17,37 @@ class LatestProjectsWidget extends BaseWidget
 
     protected int | string | array $columnSpan = 'full';
 
-    protected static ?string $heading = 'Projetos Ativos';
+    protected static ?string $heading = 'Projetos em Andamento';
+
+    public static function canView(): bool
+    {
+        $user = Auth::user();
+
+        return $user instanceof User
+            && $user->hasPermissionTo('module.projects')
+            && $user->hasPermissionTo('projects.view_any');
+    }
 
     public function table(Table $table): Table
     {
+        $user = Auth::user();
+
+        $query = Project::query()
+            ->whereIn('status', ['active', 'planning', 'on_hold'])
+            ->with(['client', 'projectManager'])
+            ->orderByDesc('updated_at')
+            ->limit(8);
+
+        if ($user instanceof User && ! ($user->hasAnyRole(['Super Admin', 'Admin', 'Financial']) || $user->hasPermissionTo('projects.view_all'))) {
+            if ($user->hasRole('Project Manager')) {
+                $query->where('project_manager_id', $user->id);
+            } else {
+                $query->whereHas('members', fn (Builder $builder) => $builder->where('users.id', $user->id));
+            }
+        }
+
         return $table
-            ->query(
-                Project::query()
-                    ->whereIn('status', ['active', 'planning'])
-                    ->with(['client', 'projectManager'])
-                    ->orderByDesc('updated_at')
-                    ->limit(8)
-            )
+            ->query($query)
             ->columns([
                 Tables\Columns\ColorColumn::make('color')
                     ->label('')
@@ -49,7 +71,7 @@ class LatestProjectsWidget extends BaseWidget
                     ->color(fn (string $state) => match ($state) {
                         'active'    => 'success',
                         'planning'  => 'warning',
-                        'on_hold'   => 'gray',
+                        'on_hold'   => 'danger',
                         'completed' => 'primary',
                         'cancelled' => 'danger',
                         default     => 'gray',

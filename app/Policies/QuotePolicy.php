@@ -9,21 +9,25 @@ class QuotePolicy
 {
     public function viewAny(User $user): bool
     {
-        return $user->hasAnyRole(['Super Admin', 'Admin', 'Account Manager', 'Project Manager']);
+        return $user->hasPermissionTo('quotes.view_any');
     }
 
     public function view(User $user, Quote $quote): bool
     {
-        return $user->hasAnyRole(['Super Admin', 'Admin', 'Account Manager', 'Project Manager']);
+        return $user->hasPermissionTo('quotes.view_any');
     }
 
     public function create(User $user): bool
     {
-        return $user->hasAnyRole(['Super Admin', 'Admin', 'Account Manager']);
+        return $user->hasPermissionTo('quotes.create');
     }
 
     public function update(User $user, Quote $quote): bool
     {
+        if (! $user->hasPermissionTo('quotes.update')) {
+            return false;
+        }
+
         if ($user->hasAnyRole(['Super Admin', 'Admin'])) {
             return true;
         }
@@ -37,12 +41,12 @@ class QuotePolicy
 
     public function delete(User $user, Quote $quote): bool
     {
-        return $user->hasAnyRole(['Super Admin', 'Admin']);
+        return $user->hasPermissionTo('quotes.delete');
     }
 
     public function restore(User $user, Quote $quote): bool
     {
-        return $user->hasAnyRole(['Super Admin', 'Admin']);
+        return $user->hasPermissionTo('quotes.delete');
     }
 
     public function forceDelete(User $user, Quote $quote): bool

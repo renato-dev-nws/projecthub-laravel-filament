@@ -66,13 +66,13 @@ class ProjectPolicyTest extends TestCase
         $this->assertTrue($this->policy->view($admin, $project));
     }
 
-    public function test_project_manager_can_view_all_projects(): void
+    public function test_project_manager_can_view_only_managed_projects(): void
     {
         $pm      = $this->userWithRole('Project Manager');
         $manager = $this->userWithRole('Project Manager');
         $project = $this->makeProject($manager);
 
-        $this->assertTrue($this->policy->view($pm, $project));
+        $this->assertFalse($this->policy->view($pm, $project));
     }
 
     public function test_developer_cannot_view_project_they_are_not_member_of(): void
@@ -151,12 +151,25 @@ class ProjectPolicyTest extends TestCase
         $this->assertTrue($this->policy->delete($admin, $project));
     }
 
-    public function test_project_manager_cannot_delete_project(): void
+    public function test_project_manager_can_delete_own_project(): void
     {
         $pm      = $this->userWithRole('Project Manager');
         $project = $this->makeProject($pm);
 
-        $this->assertFalse($this->policy->delete($pm, $project));
+        $this->assertTrue($this->policy->delete($pm, $project));
+    }
+
+    public function test_financial_can_view_projects_but_cannot_change_them(): void
+    {
+        $financial = $this->userWithRole('Financial');
+        $manager = $this->userWithRole('Project Manager');
+        $project = $this->makeProject($manager);
+
+        $this->assertTrue($this->policy->viewAny($financial));
+        $this->assertTrue($this->policy->view($financial, $project));
+        $this->assertFalse($this->policy->create($financial));
+        $this->assertFalse($this->policy->update($financial, $project));
+        $this->assertFalse($this->policy->delete($financial, $project));
     }
 
     public function test_only_super_admin_can_force_delete(): void

@@ -3,9 +3,12 @@
 namespace App\Filament\TeamPanel\Widgets;
 
 use App\Models\ProjectTask;
+use App\Models\User;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class PendingTasksWidget extends BaseWidget
 {
@@ -15,17 +18,36 @@ class PendingTasksWidget extends BaseWidget
 
     protected static ?string $heading = 'Tarefas Pendentes e Atrasadas';
 
+    public static function canView(): bool
+    {
+        $user = Auth::user();
+
+        return $user instanceof User
+            && $user->hasPermissionTo('module.tasks')
+            && $user->hasPermissionTo('tasks.view_any');
+    }
+
     public function table(Table $table): Table
     {
+        $user = Auth::user();
+
+        $query = ProjectTask::query()
+            ->whereIn('status', ['todo', 'in_progress', 'review', 'blocked'])
+            ->with(['project', 'assignee'])
+            ->whereNotNull('due_date')
+            ->orderBy('due_date')
+            ->limit(8);
+
+        if ($user instanceof User && ! $user->hasAnyRole(['Super Admin', 'Admin'])) {
+            if ($user->hasRole('Project Manager')) {
+                $query->whereHas('project', fn (Builder $builder) => $builder->where('project_manager_id', $user->id));
+            } else {
+                $query->where('assigned_to', $user->id);
+            }
+        }
+
         return $table
-            ->query(
-                ProjectTask::query()
-                    ->whereIn('status', ['todo', 'in_progress', 'review'])
-                    ->with(['project', 'assignee'])
-                    ->whereNotNull('due_date')
-                    ->orderBy('due_date')
-                    ->limit(8)
-            )
+            ->query($query)
             ->columns([
                 Tables\Columns\TextColumn::make('title')
                     ->label('Tarefa')

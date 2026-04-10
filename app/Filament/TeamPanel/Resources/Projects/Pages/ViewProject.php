@@ -8,6 +8,7 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Support\HtmlString;
 
 class ViewProject extends ViewRecord
 {
@@ -86,6 +87,25 @@ class ViewProject extends ViewRecord
 
                         TextEntry::make('description')
                             ->label('Descrição')
+                            ->columnSpanFull(),
+                    ]),
+
+                Section::make('Equipe do Projeto')
+                    ->columnSpanFull()
+                    ->schema([
+                        TextEntry::make('project_members_cards')
+                            ->hiddenLabel()
+                            ->state(function ($record): HtmlString {
+                                $members = $record->projectMembers()
+                                    ->with(['user.roles'])
+                                    ->orderBy('role')
+                                    ->get();
+
+                                return new HtmlString(view('filament.team-panel.projects.partials.project-members-cards', [
+                                    'members' => $members,
+                                ])->render());
+                            })
+                            ->html()
                             ->columnSpanFull(),
                     ]),
             ]);

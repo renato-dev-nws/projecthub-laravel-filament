@@ -4,7 +4,9 @@ namespace App\Filament\TeamPanel\Clusters\Leads\Pages;
 
 use App\Filament\TeamPanel\Clusters\Leads\LeadsCluster;
 use App\Models\Lead;
+use App\Models\User;
 use Filament\Pages\Page;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 
 class LeadKanban extends Page
@@ -28,6 +30,15 @@ class LeadKanban extends Page
         'converted'     => 'Convertido',
         'lost'          => 'Perdido',
     ];
+
+    public static function canAccess(): bool
+    {
+        $user = Auth::user();
+
+        return $user instanceof User
+            && $user->hasPermissionTo('module.crm')
+            && $user->hasPermissionTo('leads.view_any');
+    }
 
     public function getView(): string
     {

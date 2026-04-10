@@ -2,10 +2,12 @@
 
 namespace App\Filament\TeamPanel\Clusters\Tasks;
 
+use App\Models\User;
 use BackedEnum;
 use Filament\Clusters\Cluster;
 use Filament\Pages\Enums\SubNavigationPosition;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Support\Facades\Auth;
 use UnitEnum;
 
 class TasksCluster extends Cluster
@@ -21,4 +23,13 @@ class TasksCluster extends Cluster
     protected static ?SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
 
     protected static ?string $clusterBreadcrumb = 'Tarefas';
+
+    public static function canAccess(): bool
+    {
+        $user = Auth::user();
+
+        return $user instanceof User
+            && $user->hasPermissionTo('module.tasks')
+            && $user->hasPermissionTo('tasks.view_any');
+    }
 }

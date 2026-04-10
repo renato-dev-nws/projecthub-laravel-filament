@@ -9,7 +9,10 @@ use App\Filament\TeamPanel\Resources\Projects\Pages\ViewProject;
 use App\Filament\TeamPanel\Resources\Projects\Schemas\ProjectForm;
 use App\Filament\TeamPanel\Resources\Projects\Tables\ProjectsTable;
 use App\Models\Project;
+use App\Models\User;
 use BackedEnum;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -40,6 +43,27 @@ class ProjectResource extends Resource
     public static function table(Table $table): Table
     {
         return ProjectsTable::configure($table);
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery()->with(['client', 'projectManager']);
+
+        $user = Auth::user();
+
+        if (! $user instanceof User) {
+            return $query->whereRaw('1 = 0');
+        }
+
+        if ($user->hasAnyRole(['Super Admin', 'Admin', 'Financial']) || $user->hasPermissionTo('projects.view_all')) {
+            return $query;
+        }
+
+        if ($user->hasRole('Project Manager')) {
+            return $query->where('project_manager_id', $user->id);
+        }
+
+        return $query->whereHas('members', fn (Builder $builder) => $builder->where('users.id', $user->id));
     }
 
     public static function getRelations(): array

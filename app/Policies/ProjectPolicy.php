@@ -11,7 +11,7 @@ class ProjectPolicy
     public function viewAny($user): bool
     {
         if ($user instanceof User) {
-            return $user->hasAnyRole(['Super Admin', 'Admin', 'Project Manager', 'Developer', 'Designer', 'Account Manager']);
+            return $user->hasPermissionTo('projects.view_any');
         }
 
         if ($user instanceof ClientPortalUser) {
@@ -24,12 +24,16 @@ class ProjectPolicy
     public function view($user, Project $project): bool
     {
         if ($user instanceof User) {
-            if ($user->hasAnyRole(['Super Admin', 'Admin', 'Account Manager'])) {
+            if (! $user->hasPermissionTo('projects.view_any')) {
+                return false;
+            }
+
+            if ($user->hasAnyRole(['Super Admin', 'Admin', 'Financial']) || $user->hasPermissionTo('projects.view_all')) {
                 return true;
             }
 
             if ($user->hasRole('Project Manager')) {
-                return true; // vê todos para gestão
+                return $project->project_manager_id === $user->id;
             }
 
             // Developer/Designer vê apenas projetos onde é membro
@@ -46,7 +50,7 @@ class ProjectPolicy
     public function create($user): bool
     {
         if ($user instanceof User) {
-            return $user->hasAnyRole(['Super Admin', 'Admin', 'Project Manager']);
+            return $user->hasPermissionTo('projects.create');
         }
 
         return false;
@@ -55,6 +59,10 @@ class ProjectPolicy
     public function update($user, Project $project): bool
     {
         if ($user instanceof User) {
+            if (! $user->hasPermissionTo('projects.update')) {
+                return false;
+            }
+
             if ($user->hasAnyRole(['Super Admin', 'Admin'])) {
                 return true;
             }
@@ -68,7 +76,15 @@ class ProjectPolicy
     public function delete($user, Project $project): bool
     {
         if ($user instanceof User) {
-            return $user->hasAnyRole(['Super Admin', 'Admin']);
+            if (! $user->hasPermissionTo('projects.delete')) {
+                return false;
+            }
+
+            if ($user->hasAnyRole(['Super Admin', 'Admin'])) {
+                return true;
+            }
+
+            return $user->hasRole('Project Manager') && $project->project_manager_id === $user->id;
         }
 
         return false;
@@ -77,7 +93,7 @@ class ProjectPolicy
     public function restore($user, Project $project): bool
     {
         if ($user instanceof User) {
-            return $user->hasAnyRole(['Super Admin', 'Admin']);
+            return $user->hasAnyRole(['Super Admin', 'Admin']) && $user->hasPermissionTo('projects.delete');
         }
 
         return false;

@@ -9,32 +9,32 @@ class ClientPolicy
 {
     public function viewAny(User $user): bool
     {
-        return $user->hasAnyRole(['Super Admin', 'Admin', 'Account Manager', 'Project Manager']);
+        return $user->hasPermissionTo('clients.view_any');
     }
 
     public function view(User $user, Client $client): bool
     {
-        return $user->hasAnyRole(['Super Admin', 'Admin', 'Account Manager', 'Project Manager']);
+        return $user->hasPermissionTo('clients.view_any');
     }
 
     public function create(User $user): bool
     {
-        return $user->hasAnyRole(['Super Admin', 'Admin', 'Account Manager']);
+        return $user->hasPermissionTo('clients.create');
     }
 
     public function update(User $user, Client $client): bool
     {
-        return $user->hasAnyRole(['Super Admin', 'Admin', 'Account Manager']);
+        return $user->hasPermissionTo('clients.update');
     }
 
     public function delete(User $user, Client $client): bool
     {
-        return $user->hasAnyRole(['Super Admin', 'Admin']);
+        return $user->hasPermissionTo('clients.delete');
     }
 
     public function restore(User $user, Client $client): bool
     {
-        return $user->hasAnyRole(['Super Admin', 'Admin']);
+        return $user->hasPermissionTo('clients.delete');
     }
 
     public function forceDelete(User $user, Client $client): bool

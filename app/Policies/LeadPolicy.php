@@ -9,22 +9,26 @@ class LeadPolicy
 {
     public function viewAny(User $user): bool
     {
-        return $user->hasAnyRole(['Super Admin', 'Admin', 'Account Manager', 'Project Manager']);
+        return $user->hasPermissionTo('leads.view_any');
     }
 
     public function view(User $user, Lead $lead): bool
     {
-        return $user->hasAnyRole(['Super Admin', 'Admin', 'Account Manager', 'Project Manager']);
+        return $user->hasPermissionTo('leads.view_any');
     }
 
     public function create(User $user): bool
     {
-        return $user->hasAnyRole(['Super Admin', 'Admin', 'Account Manager']);
+        return $user->hasPermissionTo('leads.create');
     }
 
     public function update(User $user, Lead $lead): bool
     {
-        if ($user->hasAnyRole(['Super Admin', 'Admin'])) {
+        if (! $user->hasPermissionTo('leads.update')) {
+            return false;
+        }
+
+        if ($user->hasAnyRole(['Super Admin', 'Admin', 'Project Manager'])) {
             return true;
         }
 
@@ -33,12 +37,12 @@ class LeadPolicy
 
     public function delete(User $user, Lead $lead): bool
     {
-        return $user->hasAnyRole(['Super Admin', 'Admin']);
+        return $user->hasPermissionTo('leads.delete');
     }
 
     public function restore(User $user, Lead $lead): bool
     {
-        return $user->hasAnyRole(['Super Admin', 'Admin']);
+        return $user->hasPermissionTo('leads.delete');
     }
 
     public function forceDelete(User $user, Lead $lead): bool

@@ -12,7 +12,7 @@ class TaskModuleService
 {
     public function canAccess(User $user): bool
     {
-        return $user->hasAnyRole(['Super Admin', 'Admin', 'Project Manager', 'Developer', 'Designer']);
+        return $user->hasPermissionTo('module.tasks') && $user->hasPermissionTo('tasks.view_any');
     }
 
     public function projectOptionsFor(User $user): array
@@ -92,7 +92,8 @@ class TaskModuleService
 
     public function canFilterByMember(User $user): bool
     {
-        return $user->hasAnyRole(['Super Admin', 'Admin', 'Project Manager']);
+        return $user->hasAnyRole(['Super Admin', 'Admin', 'Project Manager'])
+            && $user->hasPermissionTo('tasks.view_any');
     }
 
     public function canUpdateStatus(User $user, ProjectTask $task): bool

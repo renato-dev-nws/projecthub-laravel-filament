@@ -9,11 +9,15 @@ class ProjectTaskPolicy
 {
     public function viewAny(User $user): bool
     {
-        return $user->hasAnyRole(['Super Admin', 'Admin', 'Project Manager', 'Developer', 'Designer']);
+        return $user->hasPermissionTo('tasks.view_any');
     }
 
     public function view(User $user, ProjectTask $task): bool
     {
+        if (! $user->hasPermissionTo('tasks.view_any')) {
+            return false;
+        }
+
         if ($user->hasAnyRole(['Super Admin', 'Admin'])) {
             return true;
         }
@@ -33,6 +37,10 @@ class ProjectTaskPolicy
 
     public function updateStatus(User $user, ProjectTask $task): bool
     {
+        if (! $user->hasPermissionTo('tasks.update_status')) {
+            return false;
+        }
+
         if ($user->hasAnyRole(['Super Admin', 'Admin'])) {
             return true;
         }
